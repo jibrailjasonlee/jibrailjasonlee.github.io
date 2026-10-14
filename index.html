@@ -3,404 +3,197 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Jason Lee | Mechanical Engineering Portfolio</title>
-<meta name="description" content="Jason Lee — Mechanical engineering student at the University of Toronto focused on robotics, mechatronics, CAD, and embedded systems.">
+<title>Jason Lee | Mechatronics and Robotics Portfolio</title>
+<meta name="description" content="Jason Lee, mechanical engineering student at the University of Toronto building toward a career in mechatronics and robotics.">
+<meta name="color-scheme" content="light dark">
+<script>try{var t=localStorage.getItem('theme')||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');document.documentElement.dataset.theme=t}catch(e){}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,500;8..60,600&display=swap" rel="stylesheet">
 <style>
-:root{
-  --paper:#F7FAFC;--card:#ffffff;--ink:#0f1720;--muted:#56626e;--accent:#1158f0;--line:#E6EEF7;--soft-shadow: 0 6px 18px rgba(14,20,30,0.06);
-}
-[data-theme="dark"]{
-  --paper:#0b0f14;--card:#071018;--ink:#e6eef6;--muted:#a8b6c3;--accent:#6fb3ff;--line:rgba(255,255,255,0.04);--soft-shadow: 0 10px 30px rgba(0,0,0,0.6);
-}
+:root{--bg:#FAFAFA;--card:#fff;--ink:#111113;--mute:#5E5E66;--line:#E3E3E7;--soft:#F1F1F3;--onink:#fff;--wip:#C98A00;--ok:#2E8B57}
+[data-theme=dark]{--bg:#0E0E10;--card:#161618;--ink:#F3F3F4;--mute:#A3A3AB;--line:#2B2B30;--soft:#1E1E21;--onink:#0E0E10;--wip:#E5B038;--ok:#5CC28A}
 *{box-sizing:border-box;margin:0}
-html{scroll-behavior:smooth}
-body{font:400 17px/1.6 Archivo,system-ui,sans-serif;color:var(--ink);background:linear-gradient(180deg,#f7fbff 0%,var(--paper) 50%);-webkit-font-smoothing:antialiased}
-[data-theme="dark"] body{background:linear-gradient(180deg,#071018 0%,var(--paper) 50%)}
-a{color:var(--accent)}
+html{scroll-behavior:smooth;scroll-padding-top:80px}
+body{font:400 16px/1.65 Inter,system-ui,sans-serif;color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased;transition:background .2s,color .2s}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--ink);outline-offset:3px;border-radius:4px}
 .wrap{max-width:1100px;margin:0 auto;padding:0 24px}
-.mono{font-family:"IBM Plex Mono",monospace;font-size:13px}
-nav{position:sticky;top:12px;z-index:60;background:linear-gradient(180deg,rgba(255,255,255,0.85),rgba(255,255,255,0.7));backdrop-filter:blur(6px);border-radius:12px;padding:10px;border:1px solid var(--line);box-shadow:var(--soft-shadow)}
-[data-theme="dark"] nav{background:linear-gradient(180deg,rgba(8,12,16,0.6),rgba(8,12,16,0.5))}
-nav .wrap{display:flex;justify-content:space-between;align-items:center}
-nav b{font-stretch:125%;font-weight:800;font-size:18px}
-nav ul{display:flex;gap:10px;list-style:none;padding:0;align-items:center}
-nav a{color:var(--ink);text-decoration:none;padding:8px;border-radius:8px;font-weight:600}
-nav a:hover{background:rgba(255,255,255,0.06)}
-.btn{display:inline-block;padding:8px 12px;border:1.2px solid var(--line);border-radius:8px;text-decoration:none;color:var(--ink);font-weight:700;transition:all .18s}
-.btn.solid{background:var(--accent);color:#fff;border-color:var(--accent)}
-.toggle{padding:6px 10px;font-size:14px;cursor:pointer}
-.header-hero{margin-top:26px;background:linear-gradient(135deg,rgba(17,88,240,0.03),rgba(31,143,255,0.01));border-radius:12px;padding:36px;border:1px solid var(--line);display:grid;grid-template-columns:1fr 360px;gap:28px;align-items:center}
-[data-theme="dark"] .header-hero{background:transparent}
-@media(max-width:880px){.header-hero{grid-template-columns:1fr;padding:28px}}
-.profile{display:flex;gap:20px;align-items:center}
-/* Black & white profile per request */
-.avatar{width:120px;height:120px;border-radius:14px;background:#fff;display:grid;place-items:center;color:#000;font-weight:800;font-size:28px;border:1px solid #000}
-h1{font-stretch:125%;font-weight:900;font-size:clamp(28px,3.8vw,44px);margin-bottom:6px}
-.lede{margin:14px 0 18px;max-width:54ch;font-size:17px;color:var(--muted)}
-.header-actions{display:flex;gap:10px;margin-top:8px}
-.quick-stats{display:flex;gap:12px;flex-wrap:wrap}
-.stat{background:var(--card);border:1px solid var(--line);padding:10px 14px;border-radius:10px;min-width:110px;text-align:center;box-shadow:var(--soft-shadow)}
-.stat strong{display:block;font-size:18px;color:var(--ink)}
-.project-controls{display:flex;gap:12px;align-items:center}
-.filters{display:flex;gap:8px}
-.filter{padding:6px 10px;border-radius:8px;border:1px solid var(--line);background:#fff;cursor:pointer;font-weight:700}
-.filter.active{background:var(--accent);color:#fff;border:1px solid rgba(0,0,0,0.02)}
-section{padding:40px 0}
-h2{font-stretch:125%;font-weight:800;font-size:24px;letter-spacing:-.01em;margin-bottom:6px}
-.sub{color:var(--muted);margin-bottom:20px}
-.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
-@media(max-width:880px){.grid{grid-template-columns:1fr}}
-.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px;overflow:hidden;transition:transform .18s ease,box-shadow .18s ease;box-shadow:0 8px 30px rgba(11,22,36,0.03)}
-.card:hover{transform:translateY(-6px);box-shadow:0 20px 50px rgba(11,22,36,0.08)}
-.card .meta{display:flex;justify-content:space-between;align-items:center;gap:10px}
-.badge{padding:6px 10px;border-radius:999px;font-weight:800;font-size:13px}
-.badge.wip{background:#fff4d6;color:#7a5600}
-.badge.ok{background:#E8F7EE;color:#0f9d58}
-.card h3{margin:10px 0;font-size:18px}
-.card p{color:var(--muted);font-size:15px}
-.card ul{margin-top:12px;padding-left:18px}
-.card li{margin-bottom:8px;color:var(--muted)}
-.card footer{display:flex;justify-content:space-between;align-items:center;margin-top:14px}
-.tools{font-size:13px;color:var(--muted)}
-.art{background:linear-gradient(180deg,rgba(242,247,255,0.5),rgba(255,255,255,0.6));padding:14px;border-radius:8px;border:1px solid var(--line)}
-.modal-backdrop{position:fixed;inset:0;background:rgba(4,10,20,0.6);display:none;place-items:center;z-index:120;padding:20px}
-.modal{background:var(--card);border-radius:12px;max-width:900px;width:100%;padding:20px;border:1px solid var(--line);box-shadow:0 30px 60px rgba(11,22,36,0.25);max-height:90vh;overflow:auto}
-.modal.open{animation:pop .18s cubic-bezier(.2,.9,.2,1)}@keyframes pop{from{transform:scale(.98);opacity:0}to{transform:scale(1);opacity:1}}
-.close{background:transparent;border:0;font-size:18px;cursor:pointer}
-.carousel{display:flex;gap:10px;align-items:center}
-.carousel .frame{min-width:320px;max-width:480px;border-radius:8px;padding:6px;border:1px solid var(--line);background:var(--card)}
-.carousel-controls{display:flex;gap:8px;align-items:center;margin-top:8px}
-.kv{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
-@media(max-width:600px){.kv{grid-template-columns:1fr}}
-.small{font-size:13px;color:var(--muted)}
-:focus{outline:3px solid rgba(17,88,240,0.18);outline-offset:3px}
+h1,h2,h3{font-family:"Source Serif 4",Georgia,serif;font-weight:600;letter-spacing:-.015em;line-height:1.15}
+.mono{font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:13px}
+nav{position:sticky;top:0;z-index:10;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;justify-content:space-between;align-items:center;height:64px}
+nav b{font:600 19px "Source Serif 4",serif}
+nav ul{display:flex;gap:6px;list-style:none;padding:0;align-items:center}
+nav li a{text-decoration:none;padding:8px 12px;border-radius:8px;font-weight:500;color:var(--mute)}
+nav li a:hover{color:var(--ink);background:var(--soft)}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink);font:500 15px Inter,sans-serif;text-decoration:none;cursor:pointer;transition:background .15s,border-color .15s}
+.btn:hover{border-color:var(--ink)}
+.btn.solid{background:var(--ink);color:var(--onink);border-color:var(--ink)}
+.btn.solid:hover{opacity:.88}
+nav .btn{padding:7px 14px}
+.hero{padding:72px 0 56px}
+.hero .wrap{display:grid;grid-template-columns:1.15fr 1fr;gap:56px;align-items:center}
+.eyebrow{color:var(--mute);font-weight:500;margin-bottom:18px}
+h1{font-size:clamp(36px,5.2vw,58px)}
+.lede{margin:22px 0 30px;font-size:18px;color:var(--mute);max-width:50ch}
+.acts{display:flex;gap:10px;flex-wrap:wrap}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.panel figure{padding:22px;border-bottom:1px solid var(--line);background:var(--soft)}
+.panel figcaption{margin-top:8px;color:var(--mute);font-size:13px}
+.facts{display:grid;grid-template-columns:auto 1fr;gap:0;margin:0;padding:6px 22px}
+.facts dt,.facts dd{padding:10px 0;border-bottom:1px solid var(--line);margin:0;font-size:14.5px}
+.facts dt{color:var(--mute);padding-right:22px}
+.facts dt:nth-last-child(2),.facts dd:last-child{border:0}
+svg{display:block;width:100%;height:auto;color:var(--ink)}
+.d{fill:none;stroke:currentColor;stroke-width:1.5;stroke-linejoin:round;stroke-linecap:round}
+.m{fill:none;stroke:var(--mute);stroke-width:1;stroke-dasharray:4 3}
+.f{fill:var(--soft);stroke:currentColor;stroke-width:1.3}
+.t{font:500 10px Inter,sans-serif;fill:var(--mute)}
+.tb{font:500 11px Inter,sans-serif;fill:currentColor}
+section{padding:64px 0}
+.head{margin-bottom:32px}
+h2{font-size:clamp(28px,3.6vw,38px);margin-bottom:10px}
+.sub{color:var(--mute);max-width:62ch}
+.loop{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.loop div{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px}
+.loop h3{font-size:19px;margin-bottom:6px}
+.loop p{color:var(--mute);font-size:14.5px;margin-bottom:12px}
+.loop small{display:block;color:var(--ink);font-size:13.5px;border-top:1px solid var(--line);padding-top:10px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.proj{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden;display:flex;flex-direction:column}
+.proj.feat{grid-column:1/-1;flex-direction:row}
+.proj.feat .vis{flex:1.1;border-right:1px solid var(--line);border-bottom:0}
+.vis{background:var(--soft);padding:20px;border-bottom:1px solid var(--line);display:flex;flex-direction:column;gap:12px}
+.tabs{display:flex;gap:6px}
+.tab{font:500 13px Inter,sans-serif;padding:5px 12px;border-radius:99px;border:1px solid var(--line);background:var(--card);color:var(--mute);cursor:pointer}
+.tab[aria-selected=true]{background:var(--ink);color:var(--onink);border-color:var(--ink)}
+.cap{color:var(--mute);font-size:12.5px}
+.info{padding:24px;flex:1}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;font-size:13px;color:var(--mute)}
+.badge{display:inline-flex;align-items:center;gap:7px;font-weight:500;color:var(--ink)}
+.badge:before{content:"";width:8px;height:8px;border-radius:50%;background:var(--ok)}
+.badge.wip:before{background:var(--wip)}
+.info h3{font-size:24px;margin-bottom:10px}
+.info p{color:var(--mute);margin-bottom:14px}
+.info ul{padding-left:18px;margin-bottom:18px}
+.info li{margin-bottom:6px}
+.spec{display:grid;grid-template-columns:auto 1fr;border-top:1px solid var(--line);font-size:14px}
+.spec dt,.spec dd{margin:0;padding:8px 0;border-bottom:1px solid var(--line)}
+.spec dt{color:var(--mute);padding-right:18px}
+.info .btn{margin-top:16px}
+.skills{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.skills div{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px}
+.skills h3{font-size:18px;margin-bottom:10px}
+.skills ul{list-style:none;padding:0}
+.skills li{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid var(--line);font-size:15px}
+.skills li:last-child{border:0}
+.skills span{color:var(--mute);font-size:13.5px}
+.next{margin-top:16px;padding:18px 22px;border:1px dashed var(--mute);border-radius:14px;color:var(--mute)}
+.next b{color:var(--ink);font-weight:600}
+.contact .box{background:var(--ink);color:var(--onink);border-radius:20px;padding:52px}
+.contact h2{color:var(--onink);font-size:clamp(30px,4.4vw,46px)}
+.contact p{opacity:.75;max-width:52ch;margin-bottom:26px}
+.contact .btn{background:transparent;color:var(--onink);border-color:color-mix(in srgb,var(--onink) 40%,transparent)}
+.contact .btn:hover{border-color:var(--onink)}
+.contact .btn.solid{background:var(--onink);color:var(--ink);border-color:var(--onink)}
+footer{padding:28px 0 40px;color:var(--mute);font-size:14px}
+@media(max-width:900px){.hero .wrap,.grid,.skills{grid-template-columns:1fr}.loop{grid-template-columns:1fr 1fr}.proj.feat{flex-direction:column}.proj.feat .vis{border-right:0;border-bottom:1px solid var(--line)}nav li:nth-child(-n+4){display:none}.contact .box{padding:32px}}
+@media(max-width:520px){.loop{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
 </style>
 </head>
 <body>
-<nav aria-label="Primary">
-  <div class="wrap">
-    <b>Jason Lee</b>
-    <ul>
-      <li><a href="#projects">Projects</a></li>
-      <li><a href="#skills">Skills</a></li>
-      <li><a class="btn" href="resume.html" aria-label="View resume">Resume</a></li>
-      <li><a class="btn" href="#contact">Contact</a></li>
-      <li><button id="theme-toggle" class="btn toggle" aria-pressed="false" title="Toggle dark mode">Dark</button></li>
-    </ul>
-  </div>
-</nav>
+<nav aria-label="Primary"><div class="wrap"><b>Jason Lee</b>
+<ul><li><a href="#projects">Projects</a></li><li><a href="#approach">Approach</a></li><li><a href="#skills">Skills</a></li><li><a href="#contact">Contact</a></li>
+<li><a class="btn" href="resume.html">Resume</a></li><li><button class="btn" id="theme" aria-label="Switch color theme">Dark</button></li></ul></div></nav>
 
-<main class="wrap">
-  <header class="header-hero" role="banner">
-    <div>
-      <div class="profile">
-        <div class="avatar" aria-hidden="true">JL</div>
-        <div>
-          <h1>Jason Lee</h1>
-          <div class="lede">Mechanical engineering student at the University of Toronto aspiring to be a robotics / mechatronics engineer. I build end-to-end mechatronic systems — CAD, machining, electronics, firmware, and control — and I focus on designs that integrate sensing and control.</div>
-          <div class="header-actions" role="group" aria-label="Quick actions">
-            <a class="btn solid" href="#projects">See projects</a>
-            <a class="btn" href="mailto:jjason.lee@mail.utoronto.ca">Email</a>
-            <a class="btn" href="https://github.com/jibrailjasonlee" target="_blank" rel="noopener">GitHub</a>
-          </div>
-        </div>
-      </div>
-
-      <div style="margin-top:16px;display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap">
-        <div class="quick-stats" aria-hidden="true">
-          <div class="stat"><strong>5+</strong><span class="small">Projects</span></div>
-          <div class="stat"><strong>ESP32</strong><span class="small">Embedded</span></div>
-          <div class="stat"><strong>CAD</strong><span class="small">SOLIDWORKS / Fusion</span></div>
-        </div>
-        <div class="project-controls">
-          <div class="filters" role="tablist" aria-label="Filter projects">
-            <button class="filter active" data-filter="all" role="tab" aria-selected="true">All</button>
-            <button class="filter" data-filter="wip" role="tab">In progress</button>
-            <button class="filter" data-filter="done" role="tab">Completed</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <aside class="art" aria-hidden="true">
-      <!-- original-style black & white drawing -->
-      <svg viewBox="0 0 260 190" role="img" aria-label="Top view drawing of a two-wheel rover chassis" width="260" height="190">
-        <rect x="60" y="25" width="150" height="110" rx="5" stroke="#000" stroke-width="1.4" fill="none"/>
-        <rect x="105" y="12" width="42" height="14" rx="3" stroke="#000" stroke-width="1.4" fill="none"/>
-        <rect x="108" y="52" width="36" height="56" rx="2" stroke="#000" stroke-width="1.4" fill="none"/>
-        <circle cx="80" cy="80" r="7" stroke="#000" stroke-width="1.2" fill="none"/>
-      </svg>
-      <div style="margin-top:10px;color:var(--muted);font-size:13px;">Selected work: compact autonomous rovers, machining, teaching models.</div>
-    </aside>
-  </header>
-
-  <section id="projects">
-    <h2>Projects</h2>
-    <p class="sub">Each project is documented like a drawing sheet: what it is, what I did, and the tools behind it. Click a card for details and scroll through design drawings and photos.</p>
-
-    <div id="grid" class="grid" aria-live="polite"></div>
-  </section>
-
-  <section id="skills">
-    <h2>Skills</h2>
-    <p class="sub">Grouped by how I use them today. I emphasise robotics and mechatronics applications.</p>
-    <div class="card">
-      <div class="kv">
-        <div>
-          <h3>Design & fabrication</h3>
-          <ul>
-            <li>SOLIDWORKS — Proficient</li>
-            <li>Fusion 360 — Proficient</li>
-            <li>3D printing — Proficient</li>
-            <li>Machining — Working</li>
-            <li>FEA — Learning</li>
-          </ul>
-        </div>
-        <div>
-          <h3>Embedded & controls</h3>
-          <ul>
-            <li>ESP32 / Arduino — Working</li>
-            <li>PID motor control — Working</li>
-            <li>ROS 2 — Learning</li>
-            <li>Python / C — Working</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section id="contact" class="card">
-    <h2>Let's talk</h2>
-    <p class="sub">Seeking internships and roles in robotics / mechatronics engineering. I welcome opportunities to contribute CAD, embedded control, and system integration skills.</p>
-    <div style="display:flex;gap:10px;flex-wrap:wrap">
-      <a class="btn solid" href="mailto:jjason.lee@mail.utoronto.ca">jjason.lee@mail.utoronto.ca</a>
-      <a class="btn" href="https://github.com/jibrailjasonlee" target="_blank" rel="noopener">GitHub</a>
-      <a class="btn" href="https://linkedin.com/in/jibrailjasonlee" target="_blank" rel="noopener">LinkedIn</a>
-    </div>
-  </section>
-
-  <footer>
-    <div class="copy">
-      <div>&copy; <span id="y"></span> Jason Lee</div>
-      <div class="small">Designed for clarity — contact for full CV & project archives.</div>
-    </div>
-  </footer>
-</main>
-
-<!-- Modal -->
-<div id="modal" class="modal-backdrop" aria-hidden="true">
-  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
-    <div style="display:flex;justify-content:space-between;align-items:center;gap:12px">
-      <h3 id="modal-title"></h3>
-      <div>
-        <button class="close" id="modal-close" aria-label="Close dialog">✕</button>
-      </div>
-    </div>
-    <div id="modal-body"></div>
-  </div>
+<header class="hero"><div class="wrap">
+<div>
+<p class="eyebrow">Mechanical Engineering, University of Toronto</p>
+<h1>Building toward a career in mechatronics and robotics.</h1>
+<p class="lede">I design the mechanical parts, wire the electronics, and write the firmware that makes a machine sense and move. Right now that means a rover of my own, a competition rover with my robotics team, and a transmission model for class.</p>
+<div class="acts"><a class="btn solid" href="#projects">See my projects</a><a class="btn" href="mailto:jjason.lee@mail.utoronto.ca">Email me</a><a class="btn" href="https://github.com/jibrailjasonlee" target="_blank" rel="noopener">GitHub</a></div>
 </div>
+<div class="panel">
+<figure><div id="hero-art"></div><figcaption>Rover-1 chassis layout, 150 × 110 mm plate</figcaption></figure>
+<dl class="facts"><dt>Seeking</dt><dd>Robotics and mechatronics internships</dd><dt>Strengths</dt><dd>CAD, 3D printing, ESP32 firmware, PID control</dd><dt>Learning</dt><dd>ROS 2, Simulink, FEA</dd><dt>Building now</dt><dd>Rover-1, IGVC rover, CVT model</dd></dl>
+</div>
+</div></header>
+
+<main>
+<section id="approach" style="padding-top:24px"><div class="wrap">
+<div class="head"><h2>The mechatronic loop</h2><p class="sub">Robots work when the mechanics, electronics, and software are designed together. My projects practise each part of that loop.</p></div>
+<div class="loop">
+<div><h3>Design</h3><p>CAD and fabrication that fit the electronics and the load.</p><small>Rover-1 chassis and motor brackets, machined piston</small></div>
+<div><h3>Sense</h3><p>Measuring the machine and the world around it.</p><small>Wheel encoders and an HC-SR04 ultrasonic sensor on Rover-1</small></div>
+<div><h3>Control</h3><p>Closed-loop firmware that holds a speed or follows a command.</p><small>PID speed control and encoder interrupts on an ESP32</small></div>
+<div><h3>Integrate</h3><p>Power, wiring, and communication that make the pieces one system.</p><small>6 V and 5 V rails, WiFi teleoperation, IGVC team rover</small></div>
+</div></div></section>
+
+<section id="projects" style="padding-top:24px"><div class="wrap">
+<div class="head"><h2>Projects</h2><p class="sub">Drawings show the real layout and architecture of each build. Use the tabs on each project to switch views.</p></div>
+<div class="grid" id="grid"></div>
+</div></section>
+
+<section id="skills" style="padding-top:24px"><div class="wrap">
+<div class="head"><h2>Skills</h2><p class="sub">Grouped by how I use them in robotics and mechatronics work.</p></div>
+<div class="skills">
+<div><h3>Design and fabrication</h3><ul><li>SOLIDWORKS<span>Proficient</span></li><li>Fusion 360<span>Proficient</span></li><li>3D printing<span>Proficient</span></li><li>Machining<span>Working</span></li><li>FEA<span>Learning</span></li></ul></div>
+<div><h3>Embedded and controls</h3><ul><li>ESP32 and Arduino<span>Working</span></li><li>PID motor control<span>Working</span></li><li>C and C++<span>Working</span></li><li>MATLAB and Simulink<span>Learning</span></li></ul></div>
+<div><h3>Software and robotics</h3><ul><li>Python<span>Working</span></li><li>ROS 2<span>Learning</span></li><li>Robot task modelling<span>Exploring</span></li></ul></div>
+</div>
+<p class="next"><b>Next on my roadmap:</b> modelling Rover-1's motor loop in Simulink, running it on ROS 2, and studying physical intelligence, meaning how learned models of a task turn into real-world motion.</p>
+</div></section>
+
+<section class="contact" id="contact"><div class="wrap"><div class="box">
+<h2>Let's build something that moves.</h2>
+<p>I'm looking for internships in robotics and mechatronics engineering, where I can contribute CAD, embedded control, and system integration.</p>
+<div class="acts"><a class="btn solid" href="mailto:jjason.lee@mail.utoronto.ca">jjason.lee@mail.utoronto.ca</a><a class="btn" href="https://github.com/jibrailjasonlee" target="_blank" rel="noopener">GitHub</a><a class="btn" href="https://linkedin.com/in/jibrailjasonlee" target="_blank" rel="noopener">LinkedIn</a></div>
+</div></div></section>
+</main>
+<footer><div class="wrap">&copy; <span id="y"></span> Jason Lee</div></footer>
 
 <script>
-// Original-style drawings per project (arrays allow multiple images)
-const ARTSETS = {
-  rover: [
-    `<svg viewBox="0 0 260 190" width="520" height="360" role="img" aria-hidden="true"><rect class="draw" x="60" y="25" width="150" height="110" rx="5" stroke="#000" fill="none"/><rect class="draw" x="105" y="12" width="42" height="14" rx="3" stroke="#000" fill="none"/><rect class="draw" x="105" y="134" width="42" height="14" rx="3" stroke="#000" fill="none"/><rect class="draw" x="108" y="52" width="36" height="56" rx="2" stroke="#000" fill="none"/><circle class="draw" cx="80" cy="80" r="7" stroke="#000" fill="none"/></svg>`,
-    `<svg viewBox="0 0 260 190" width="520" height="360" role="img"><path d="M165 60h25v40h-25z" stroke="#000" fill="none"/></svg>`
-  ],
-  igvc: [
-    `<svg viewBox="0 0 260 190" width="520" height="360" role="img"><path d="M10 120C60 120 60 60 110 60S150 20 190 20" stroke="#000" fill="none"/></svg>`,
-    `<svg viewBox="0 0 260 190" width="520" height="360" role="img"><path d="M10 135C70 135 70 80 120 80S160 40 195 40" stroke="#000" fill="none"/></svg>`
-  ],
-  piston: [
-    `<svg viewBox="0 0 260 190" width="520" height="360" role="img"><rect x="60" y="28" width="80" height="84" stroke="#000" fill="none"/><circle cx="100" cy="90" r="10" stroke="#000" fill="none"/></svg>`
-  ],
-  tower: [
-    `<svg viewBox="0 0 260 190" width="520" height="360" role="img"><rect x="82" y="8" width="36" height="104" rx="4" stroke="#000" fill="none"/></svg>`
-  ],
-  cvt: [
-    `<svg viewBox="0 0 260 190" width="520" height="360" role="img"><circle cx="62" cy="70" r="30" stroke="#000" fill="none"/><circle cx="142" cy="70" r="18" stroke="#000" fill="none"/></svg>`
-  ]
-};
-
-const P = [
-  {id:'rover',art:'rover',t:'Rover-1: 2WD autonomous rover',st:'In progress',wip:true,yr:'2026',role:'Solo: CAD, firmware, electronics',tools:'SOLIDWORKS, Bambu A1 mini, Arduino IDE, ESP32',
-    p:'A differential-drive rover designed end-to-end — chassis CAD, closed-loop motor control, WiFi teleoperation.',
-    b:['Designed and 3D printed a 150 x 110 x 4 mm chassis plate and motor brackets','ESP32 firmware: PWM, encoder interrupts, PID speed control, WiFi teleoperation','Battery and power distribution with overcurrent protection']},
-  {id:'igvc',art:'igvc',t:'Autonomous rover for IGVC',st:'In progress',wip:true,yr:'2026',role:'Autonomous Rover Subteam',tools:'CAD, prototyping, sensors',
-    p:'Member of the team building a rover for the Intelligent Ground Vehicle Competition (IGVC).',
-    b:['Worked on drivetrain and chassis packaging','Integrated perception sensors and logging','Tested traction solutions on varied terrain']},
-  {id:'piston',art:'piston',t:'Piston machining',st:'Completed',wip:false,yr:'2025',role:'Machinist',tools:'Lathe, endmill, steel',
-    p:'Machined a piston from raw stock, working from drawing to finished part.',
-    b:['Selected material and established key tolerances','Planned and executed lathe and mill operations','Achieved specified fit within tolerance limits']},
-  {id:'tower',art:'tower',t:'Hydroponic tower redesign',st:'Completed',wip:false,yr:'2024',role:'Designer',tools:'SOLIDWORKS, 3D printing',
-    p:'Redesigned a hydroponic tower to improve maintenance and flow.',
-    b:['Analyzed weaknesses of the original design','Redesigned for easier assembly and improved nutrient flow','Reduced assembly time by measurable amount']},
-  {id:'cvt',art:'cvt',t:'CVT drivetrain teaching model',st:'In progress',wip:true,yr:'2026',role:'Team of four, MIE243',tools:'SOLIDWORKS, decision matrices',
-    p:'Low-cost modular teaching model showing continuously variable transmission behaviour.',
-    b:['Selected CVT using weighted decision matrix','Designed modular parts for rapid swapping and testing']}
-];
-
-// Render grid
-const grid = document.getElementById('grid');
-function render(list){
-  grid.innerHTML = list.map(x=>`<article class="card" data-id="${x.id}" data-status="${x.wip? 'wip':'done'}" tabindex="0">
-    <div class="meta"><div class="badge ${x.wip? 'wip':'ok'}">${x.wip? 'In progress':'Completed'}</div><div class="small">${x.yr}</div></div>
-    <h3>${x.t}</h3>
-    <div class="art">${ARTSETS[x.art][0] || ''}</div>
-    <p>${x.p}</p>
-    <ul>${x.b.map(i=>`<li>${i}</li>`).join('')}</ul>
-    <footer><div class="tools">${x.role} • <span class="mono">${x.tools}</span></div><div><button class="btn" data-open="${x.id}">Details</button></div></footer>
-  </article>`).join('');
-}
-render(P);
-
-// Filters
-const filters = document.querySelectorAll('.filter');
-filters.forEach(btn=>btn.addEventListener('click', ()=>{
-  filters.forEach(b=>{b.classList.remove('active');b.setAttribute('aria-selected','false')});
-  btn.classList.add('active');btn.setAttribute('aria-selected','true');
-  const f = btn.dataset.filter;
-  const items = Array.from(document.querySelectorAll('#grid .card'));
-  items.forEach(it=>{
-    const st = it.dataset.status;
-    if(f==='all') it.style.display='block';
-    else if(f==='wip') it.style.display = (st==='wip')? 'block':'none';
-    else if(f==='done') it.style.display = (st==='done')? 'block':'none';
-  });
-}));
-
-// Modal + carousel behavior
-const modal = document.getElementById('modal');
-const modalBody = document.getElementById('modal-body');
-const modalTitle = document.getElementById('modal-title');
-const modalClose = document.getElementById('modal-close');
-let currentSet = [];
-let currentIndex = 0;
-
-function renderCarousel(set){
-  if(!set || set.length===0) return '';
-  const frames = set.map((s,i)=>`<div class="frame" data-idx="${i}" style="display:${i===0? 'block':'none'}">${s}</div>`).join('');
-  return `<div class="carousel">${frames}</div><div class="carousel-controls"><button class="btn" id="prev">◀</button><div class="small">Image <span id="img-index">1</span> of ${set.length}</div><button class="btn" id="next">▶</button></div>`;
-}
-
-function openModal(id){
-  const p = P.find(x=>x.id===id);
-  if(!p) return;
-  modalTitle.textContent = p.t;
-  currentSet = ARTSETS[p.art] || [];
-  currentIndex = 0;
-  modalBody.innerHTML = `
-    <div style="display:flex;gap:18px;align-items:flex-start;flex-wrap:wrap">
-      <div style="flex:1 1 420px">${renderCarousel(currentSet)}</div>
-      <div style="flex:1 1 320px">
-        <p>${p.p}</p>
-        <h4>Highlights</h4>
-        <ul>${p.b.map(i=>`<li>${i}</li>`).join('')}</ul>
-        <div class="kv">
-          <div><strong>Status</strong><div class="small">${p.wip? 'In progress':'Completed'}</div></div>
-          <div><strong>Year</strong><div class="small">${p.yr}</div></div>
-          <div><strong>Role</strong><div class="small">${p.role}</div></div>
-          <div><strong>Tools</strong><div class="small mono">${p.tools}</div></div>
-        </div>
-      </div>
-    </div>`;
-
-  modal.style.display = 'grid';
-  modal.setAttribute('aria-hidden','false');
-  modal.classList.add('open');
-  setupCarouselControls();
-  modalClose.focus();
-}
-
-function setupCarouselControls(){
-  const prev = document.getElementById('prev');
-  const next = document.getElementById('next');
-  const idx = document.getElementById('img-index');
-  if(!prev || !next || !idx) return;
-  prev.onclick = ()=>{
-    showImage(currentIndex-1);
-  };
-  next.onclick = ()=>{
-    showImage(currentIndex+1);
-  };
-  // keyboard left/right
-  document.onkeydown = (e)=>{
-    if(e.key==='ArrowLeft') showImage(currentIndex-1);
-    if(e.key==='ArrowRight') showImage(currentIndex+1);
-  };
-}
-
-function showImage(i){
-  if(!currentSet || currentSet.length===0) return;
-  if(i<0) i = currentSet.length-1;
-  if(i>=currentSet.length) i = 0;
-  currentIndex = i;
-  document.querySelectorAll('.frame').forEach(f=>f.style.display='none');
-  const sel = document.querySelector('.frame[data-idx="'+i+'"]');
-  if(sel) sel.style.display='block';
-  const idx = document.getElementById('img-index');
-  if(idx) idx.textContent = (i+1);
-}
-
-function closeModal(){
-  modal.style.display = 'none';
-  modal.setAttribute('aria-hidden','true');
-  modal.classList.remove('open');
-  document.onkeydown = null;
-}
-
-// Open handlers
-document.addEventListener('click', e=>{
-  const open = e.target.closest('[data-open]');
-  if(open){
-    openModal(open.dataset.open);
-  }
-  if(e.target === modal || e.target.id === 'modal-close') closeModal();
-});
-
-// keyboard support
-document.addEventListener('keydown', e=>{
-  if(e.key === 'Escape') closeModal();
-  if(e.key === 'Enter' && document.activeElement && document.activeElement.classList.contains('card')){
-    openModal(document.activeElement.dataset.id);
-  }
-});
-
-// attach open buttons from initial render
-function attachOpenButtons(){
-  document.querySelectorAll('[data-open]').forEach(b=>b.addEventListener('click', ev=>{
-    ev.stopPropagation();
-    openModal(b.dataset.open);
-  }));
-}
-attachOpenButtons();
-
-// dynamic year
-document.getElementById('y').textContent = new Date().getFullYear();
-
-// focusable cards for keyboard users
-document.querySelectorAll('#grid .card').forEach(c=>c.setAttribute('tabindex','0'));
-
-// Theme toggle
-const themeToggle = document.getElementById('theme-toggle');
-function setTheme(t){
-  if(t==='dark') document.documentElement.setAttribute('data-theme','dark');
-  else document.documentElement.removeAttribute('data-theme');
-  themeToggle.setAttribute('aria-pressed', t==='dark');
-  themeToggle.textContent = t==='dark'? 'Light' : 'Dark';
-}
-// initialize from localStorage
-const saved = localStorage.getItem('theme');
-if(saved) setTheme(saved);
-themeToggle.addEventListener('click', ()=>{
-  const cur = document.documentElement.getAttribute('data-theme')==='dark' ? 'dark':'light';
-  const next = cur==='dark' ? 'light' : 'dark';
-  setTheme(next);
-  localStorage.setItem('theme', next);
-});
+const S=(b)=>`<svg viewBox="0 0 320 224" role="img" aria-label="Engineering drawing">${b}</svg>`;
+const AR='<defs><marker id="ar" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="M0 0L7 3.5L0 7z" fill="currentColor"/></marker></defs>';
+const box=(x,y,w,h,l,l2)=>`<rect class="f" x="${x}" y="${y}" width="${w}" height="${h}" rx="5"/><text class="tb" x="${x+w/2}" y="${y+h/2+(l2?-2:4)}" text-anchor="middle">${l}</text>${l2?`<text class="t" x="${x+w/2}" y="${y+h/2+11}" text-anchor="middle">${l2}</text>`:''}`;
+const arrow=d=>`<path class="d" d="${d}" marker-end="url(#ar)" style="stroke-width:1.2"/>`;
+function cvt(a1,a2){const p=(c,a,l)=>{const r=30-2*a,y=112;return `<polygon class="f" points="${c-42},${y-a-33} ${c+42},${y-a-33} ${c+42},${y-a-21} ${c},${y-a} ${c-42},${y-a-21}"/><polygon class="f" points="${c-42},${y+a+33} ${c+42},${y+a+33} ${c+42},${y+a+21} ${c},${y+a} ${c-42},${y+a+21}"/><path class="m" d="M${c} 28V196"/><rect class="d" x="${c-r-5}" y="${y-13}" width="10" height="26" style="fill:var(--ink)"/><rect class="d" x="${c+r-5}" y="${y-13}" width="10" height="26" style="fill:var(--ink)"/><text class="t" x="${c}" y="214" text-anchor="middle">${l}</text>`},r1=30-2*a1,r2=30-2*a2;return S(p(90,a1,'Drive pulley')+p(230,a2,'Driven pulley')+`<path class="d" d="M${90+r1+5} 112H${230-r2-5}"/>`)}
+const ART={
+rover:[S(`<rect class="d" x="40" y="24" width="240" height="176" rx="6"/><rect class="f" x="118" y="6" width="67" height="30" rx="4"/><rect class="f" x="118" y="188" width="67" height="30" rx="4"/><rect class="f" x="124" y="42" width="56" height="22" rx="3"/><rect class="f" x="124" y="160" width="56" height="22" rx="3"/><path class="d" d="M118 52h6M180 52h6M118 172h6M180 172h6"/><circle class="f" cx="56" cy="112" r="8"/><rect class="f" x="66" y="82" width="42" height="60" rx="3"/><rect class="f" x="114" y="86" width="40" height="52" rx="3"/><rect class="f" x="162" y="82" width="60" height="60" rx="3"/><rect class="f" x="230" y="88" width="24" height="20" rx="2"/><rect class="f" x="230" y="116" width="24" height="20" rx="2"/><rect class="d" x="262" y="56" width="12" height="112"/><circle class="f" cx="290" cy="92" r="12"/><circle class="f" cx="290" cy="132" r="12"/><text class="t" x="87" y="116" text-anchor="middle">2×18650</text><text class="t" x="134" y="116" text-anchor="middle">TB6612</text><text class="tb" x="192" y="116" text-anchor="middle">ESP32</text><text class="t" x="242" y="101" text-anchor="middle">6V</text><text class="t" x="242" y="129" text-anchor="middle">5V</text><text class="t" x="44" y="136" >caster</text><text class="t" x="204" y="53">N20 motor + encoder</text><text class="t" x="290" y="162" text-anchor="middle">HC-SR04</text>`),
+ S(AR+box(6,90,74,44,'2×18650','battery')+box(110,28,80,40,'Buck 6 V','LM2596')+box(110,156,80,40,'Buck 5 V','logic rail')+box(216,28,86,40,'TB6612FNG','motor driver')+box(216,156,86,40,'ESP32','PID + WiFi')+box(216,92,86,40,'N20 motors','with encoders')+arrow('M80 104L110 54')+arrow('M80 120L110 170')+arrow('M190 48H216')+arrow('M190 176H216')+arrow('M259 156V68')+arrow('M259 132V156')+`<text class="t" x="270" y="112">encoder</text><text class="t" x="270" y="146">counts</text>`)],
+igvc:[S(`<path class="d" d="M10 190C70 190 80 110 150 110S240 50 312 44" style="stroke-width:2.2"/><path class="d" d="M10 130C60 130 60 66 130 62S230 6 312 4" style="stroke-width:2.2"/><path class="m" d="M10 160C66 160 70 88 140 86S236 28 312 24"/><circle class="f" cx="150" cy="70" r="8"/><circle class="f" cx="238" cy="30" r="8"/><rect class="f" x="30" y="150" width="30" height="20" rx="3" transform="rotate(-14 45 160)"/><circle class="d" cx="78" cy="126" r="3"/><circle class="d" cx="140" cy="86" r="3"/><circle class="d" cx="236" cy="28" r="3"/><text class="t" x="154" y="48">obstacle</text><text class="t" x="20" y="212">lane boundaries, obstacles, waypoints</text>`),
+ S(AR+box(8,86,64,52,'Sensors')+box(98,86,64,52,'Perception')+box(188,86,64,52,'Planning')+box(260,86,56,52,'Drive')+arrow('M72 112H98')+arrow('M162 112H188')+arrow('M252 112H260'))],
+piston:[S(`<path class="d" d="M110 34h100v26M110 34v26M110 60h100M110 60v126h100V60"/><path class="d" d="M110 74h100M110 86h100M110 98h100"/><circle class="d" cx="160" cy="142" r="18"/><path class="m" d="M160 24V196M96 142H224"/><path class="d" d="M110 206h100M110 200v12M210 200v12M236 34v152M230 34h12M230 186h12" style="stroke-width:1"/><text class="t" x="160" y="222" text-anchor="middle">Ø bore</text><text class="t" x="244" y="114">height</text><text class="t" x="228" y="80">ring grooves</text><text class="t" x="20" y="146">wrist pin bore</text>`),
+ S(AR+box(6,86,64,52,'Raw stock','steel')+box(88,86,64,52,'Lathe','turn, groove')+box(170,86,64,52,'Mill','pin bore')+box(252,86,64,52,'Inspect','fit check')+arrow('M70 112H88')+arrow('M152 112H170')+arrow('M234 112H252'))],
+tower:[S(`<rect class="d" x="130" y="14" width="56" height="150" rx="8"/><path class="d" d="M130 40h-14l-4 10h18M186 70h14l4 10h-18M130 100h-14l-4 10h18M186 130h14l4 10h-18"/><path class="d" d="M100 164h116l10 44H90z"/><path class="m" d="M158 14V4M158 164v-14"/><path class="d" d="M250 190V30h-60" marker-end="url(#ar)" style="stroke-width:1.2"/><rect class="f" x="236" y="176" width="28" height="20" rx="3"/><text class="t" x="74" y="52" text-anchor="end">net pot</text><text class="t" x="210" y="200">reservoir</text><text class="t" x="268" y="120">pump</text><text class="t" x="158" y="222" text-anchor="middle">nutrient flow loop</text>`.replace('<text class="t" x="268" y="120">pump</text>','<text class="t" x="262" y="120">riser</text>'))],
+cvt:[cvt(11,1),cvt(1,11)]};
+const P=[
+{id:'rover',feat:1,t:'Rover-1: 2WD autonomous rover',wip:1,yr:'2026',role:'Solo: CAD, firmware, electronics',tools:'SOLIDWORKS, Bambu A1 mini, Arduino IDE, ESP32',tabs:['Chassis layout','Electrical architecture'],
+ p:'A differential-drive rover that I am designing and building end to end: chassis CAD, power, sensing, and closed-loop motor control.',
+ b:['Designed and 3D printed a 150 × 110 × 4 mm chassis plate and N20 motor brackets','ESP32 firmware with PWM motor control, encoder interrupts, PID speed control, and WiFi teleoperation','Two buck converters split the battery into a 6 V motor rail and a 5 V logic rail','Next: hardware tuning, then Simulink modelling and ROS 2'],link:'https://github.com/jibrailjasonlee/Rover-1'},
+{id:'igvc',t:'Autonomous rover for IGVC',wip:1,yr:'2026',role:'Autonomous Rover Subteam',tools:'CAD, prototyping, sensors',tabs:['Course','Autonomy stack'],cap:'Illustrative drawing of the competition task',
+ p:'Member of the robotics association subteam building a new rover for the Intelligent Ground Vehicle Competition (IGVC).',
+ b:['Worked on drivetrain and chassis packaging','Integrated perception sensors and logging','Tested traction solutions on varied terrain']},
+{id:'cvt',t:'CVT drivetrain teaching model',wip:1,yr:'2026',role:'Team of four, MIE243',tools:'SOLIDWORKS, decision matrices',tabs:['Low ratio','High ratio'],cap:'Moving the pulley halves changes the belt radius, so the ratio changes',
+ p:'A low-cost, modular teaching model that shows how a continuously variable transmission behaves, so students can swap parts and see the effect.',
+ b:['Selected the CVT using a documented weighted decision matrix','Designed modular parts for quick swapping and testing','Constraint: no electronics, SOLIDWORKS and sketches only']},
+{id:'piston',t:'Piston machining',wip:0,yr:'2026',role:'Machinist',tools:'Lathe, endmill, steel',tabs:['Part section','Process'],cap:'Illustrative section view',
+ p:'Machined a piston from raw stock, working from drawing to finished part.',
+ b:['Selected material and established key tolerances','Planned and ran lathe and mill operations','Achieved the specified fit within tolerance limits']},
+{id:'tower',t:'Hydroponic tower redesign',wip:0,yr:'2026',role:'Designer',tools:'SOLIDWORKS, 3D printing',tabs:['Flow loop'],cap:'Illustrative layout',
+ p:'Redesigned a hydroponic tower to improve maintenance and nutrient flow.',
+ b:['Analyzed weaknesses of the original design','Redesigned for easier assembly and better nutrient flow','Add a measured result here, for example assembly time saved']}];
+document.getElementById('hero-art').innerHTML=ART.rover[0];
+document.getElementById('grid').innerHTML=P.map(x=>`<article class="proj${x.feat?' feat':''}" id="${x.id}"><div class="vis"><div data-art>${ART[x.id][0]}</div>${x.tabs.length>1?`<div class="tabs" role="tablist" aria-label="${x.t} drawings">${x.tabs.map((n,i)=>`<button class="tab" role="tab" data-i="${i}" aria-selected="${i==0}">${n}</button>`).join('')}</div>`:''}${x.cap?`<p class="cap">${x.cap}</p>`:''}</div>
+<div class="info"><div class="top"><span class="badge${x.wip?' wip':''}">${x.wip?'In progress':'Completed'}</span><span>${x.yr}</span></div><h3>${x.t}</h3><p>${x.p}</p><ul>${x.b.map(i=>`<li>${i}</li>`).join('')}</ul>
+<dl class="spec"><dt>Role</dt><dd>${x.role}</dd><dt>Tools</dt><dd class="mono">${x.tools}</dd></dl>${x.link?`<a class="btn solid" href="${x.link}" target="_blank" rel="noopener">View code on GitHub</a>`:''}</div></article>`).join('');
+document.querySelectorAll('.proj').forEach(el=>{const x=P.find(p=>p.id===el.id);el.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{el.querySelectorAll('.tab').forEach(b=>b.setAttribute('aria-selected',b===t));el.querySelector('[data-art]').innerHTML=ART[x.id][t.dataset.i]})});
+const tb=document.getElementById('theme'),root=document.documentElement;
+function paint(){tb.textContent=root.dataset.theme==='dark'?'Light':'Dark'}paint();
+tb.onclick=()=>{const n=root.dataset.theme==='dark'?'light':'dark';root.dataset.theme=n;paint();try{localStorage.setItem('theme',n)}catch(e){}};
+document.getElementById('y').textContent=new Date().getFullYear();
 </script>
 </body>
 </html>
