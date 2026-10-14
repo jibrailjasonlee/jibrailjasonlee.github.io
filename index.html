@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Your Name | Mechanical Engineering Portfolio</title>
+<meta name="description" content="Mechanical engineering student at the University of Toronto working on mechatronics and robotics.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#F1F4F6;--card:#fff;--ink:#18212B;--line:#C9D3DA;--blue:#1F4FD8;--mute:#556270;--amber:#E3A82B;--todo:#FFE9A8}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth}
+body{font:400 17px/1.6 Archivo,system-ui,sans-serif;color:var(--ink);background:var(--paper)}
+a{color:var(--blue)}
+:focus-visible{outline:3px solid var(--blue);outline-offset:3px;border-radius:2px}
+.wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+.mono{font-family:"IBM Plex Mono",monospace;font-size:13px}
+.todo{background:var(--todo);padding:0 4px;border-radius:2px}
+nav{position:sticky;top:0;z-index:5;background:rgba(241,244,246,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;justify-content:space-between;align-items:center;height:60px}
+nav b{font-stretch:125%;font-weight:700}
+nav ul{display:flex;gap:22px;list-style:none;padding:0;align-items:center}
+nav a{text-decoration:none;color:var(--ink);font-weight:500}
+nav a:hover{color:var(--blue)}
+.btn{display:inline-block;padding:10px 18px;border:1.5px solid var(--ink);border-radius:4px;text-decoration:none;color:var(--ink);font-weight:600;transition:background .15s,color .15s}
+.btn:hover,.btn.solid{background:var(--ink);color:#fff}
+.btn.solid:hover{background:var(--blue);border-color:var(--blue)}
+.hero{background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:32px 32px;background-position:-1px -1px;border-bottom:1px solid var(--line)}
+.hero .wrap{display:grid;grid-template-columns:1.2fr 1fr;gap:40px;align-items:center;padding-top:72px;padding-bottom:72px}
+h1{font-stretch:125%;font-weight:800;font-size:clamp(40px,6.4vw,76px);line-height:1;letter-spacing:-.02em}
+.lede{margin:22px 0 28px;max-width:46ch;font-size:19px;color:#2d3946}
+.hero .btn+.btn{margin-left:10px}
+.hero svg{width:100%;height:auto;background:var(--paper);border:1.5px solid var(--ink);border-radius:4px}
+.draw{fill:none;stroke:var(--ink);stroke-width:1.5;stroke-linejoin:round}
+.dim{fill:none;stroke:var(--blue);stroke-width:1;stroke-dasharray:300;stroke-dashoffset:300;animation:d 1.6s .4s ease forwards}
+.dimt{fill:var(--blue);font:500 10px "IBM Plex Mono",monospace;opacity:0;animation:f .5s 1.6s forwards}
+@keyframes d{to{stroke-dashoffset:0}}@keyframes f{to{opacity:1}}
+section{padding:80px 0}
+h2{font-stretch:125%;font-weight:700;font-size:32px;letter-spacing:-.01em;margin-bottom:8px}
+.sub{color:var(--mute);margin-bottom:40px;max-width:60ch}
+.sheet{display:grid;grid-template-columns:1fr 1fr;background:var(--card);border:1.5px solid var(--ink);border-radius:4px;margin-bottom:28px;overflow:hidden}
+.sheet figure{background:var(--paper);border-right:1.5px solid var(--ink);display:grid;place-items:center;padding:28px;min-height:260px}
+.sheet figure svg{width:100%;max-width:320px;height:auto}
+.body{padding:28px}
+.body h3{font-stretch:112%;font-weight:700;font-size:24px;line-height:1.15;margin-bottom:10px}
+.body p{color:#2d3946;margin-bottom:14px}
+.body ul{padding-left:18px;margin-bottom:18px;color:#2d3946}
+.body li{margin-bottom:4px}
+dl.tb{display:grid;grid-template-columns:auto 1fr;border-top:1px solid var(--line);margin:0}
+dl.tb dt,dl.tb dd{padding:7px 0;border-bottom:1px solid var(--line);margin:0}
+dl.tb dt{color:var(--mute);padding-right:20px;font-weight:500}
+dl.tb dd{font-size:15px}
+.st{display:inline-block;padding:1px 9px;border-radius:99px;font-size:13px;font-weight:600;background:#E3EBFB;color:var(--blue)}
+.st.wip{background:#FBEFCF;color:#7a5600}
+.skills{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:0;border:1.5px solid var(--ink);border-radius:4px;background:var(--card)}
+.skills div{padding:22px;border-right:1px solid var(--line)}
+.skills div:last-child{border:0}
+.skills h3{font-size:16px;font-stretch:112%;margin-bottom:10px}
+.skills li{list-style:none;display:flex;justify-content:space-between;gap:10px;padding:5px 0;border-bottom:1px dotted var(--line)}
+.skills li span{color:var(--mute);font-size:14px}
+.contact{background:var(--ink);color:#fff}
+.contact h2{font-size:clamp(30px,5vw,52px)}
+.contact p{color:#b9c4cf;margin-bottom:26px;max-width:50ch}
+.contact .btn{border-color:#fff;color:#fff}.contact .btn:hover{background:#fff;color:var(--ink)}
+.contact .btn.solid{background:#fff;color:var(--ink)}.contact .btn.solid:hover{background:var(--blue);color:#fff;border-color:var(--blue)}
+.contact .btn+.btn{margin-left:8px}
+footer{padding:22px 0;color:var(--mute);font-size:14px}
+@media(max-width:820px){.hero .wrap,.sheet{grid-template-columns:1fr}.sheet figure{border-right:0;border-bottom:1.5px solid var(--ink)}nav ul li:not(:last-child){display:none}.skills div{border-right:0;border-bottom:1px solid var(--line)}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.dim{animation:none;stroke-dashoffset:0}.dimt{animation:none;opacity:1}}
+</style>
+</head>
+<body>
+<!-- EDIT: highlighted yellow text (class "todo") marks details only you know. Search for "todo" and replace each one. -->
+<nav><div class="wrap"><b>Your Name</b>
+<ul><li><a href="#projects">Projects</a></li><li><a href="#skills">Skills</a></li><li><a class="btn" href="resume.pdf">Resume</a></li></ul></div></nav>
+
+<header class="hero"><div class="wrap">
+<div>
+<h1>Jason Lee</h1>
+<p class="lede">Mechanical engineering student at the University of Toronto, building at the point where CAD, machining, firmware, and control meet. I like projects I can design, make, wire, and tune myself.</p>
+<a class="btn solid" href="#projects">See projects</a><a class="btn" href="#contact">Get in touch</a>
+</div>
+<svg viewBox="0 0 260 190" role="img" aria-label="Top view drawing of a two-wheel rover chassis, 150 by 110 millimetres">
+<rect class="draw" x="60" y="25" width="150" height="110" rx="5"/>
+<rect class="draw" x="105" y="12" width="42" height="14" rx="3"/><rect class="draw" x="105" y="134" width="42" height="14" rx="3"/>
+<rect class="draw" x="108" y="52" width="36" height="56" rx="2"/>
+<circle class="draw" cx="80" cy="80" r="7"/><rect class="draw" x="204" y="55" width="8" height="50"/>
+<path class="draw" d="M165 60h25v40h-25z"/>
+<path class="dim" d="M60 168h150M60 162v12M210 162v12"/><text class="dimt" x="118" y="182">150 mm</text>
+<path class="dim" d="M32 25v110M26 25h12M26 135h12"/><text class="dimt" x="4" y="84" transform="rotate(-90 12 84)">110 mm</text>
+</svg>
+</div></header>
+
+<main>
+<section id="projects"><div class="wrap">
+<h2>Projects</h2>
+<p class="sub">Each project is documented like a drawing sheet: what it is, what I did, and the tools behind it.</p>
+<div id="list"></div>
+</div></section>
+
+<section id="skills" style="padding-top:0"><div class="wrap">
+<h2>Skills</h2>
+<p class="sub">Grouped by how I use them today. Learning items are in active progress.</p>
+<div class="skills">
+<div><h3>Design and fabrication</h3><ul>
+<li>SOLIDWORKS<span>Proficient</span></li><li>Fusion 360<span>Proficient</span></li><li>3D printing<span>Proficient</span></li><li>Machining<span>Basic</span></li><li>FEA<span>Learning</span></li></ul></div>
+<div><h3>Programming</h3><ul>
+<li>Python<span>Working</span></li><li>C<span>Working</span></li><li>C++ (Arduino IDE)<span>Learning</span></li><li>MATLAB<span>Basic</span></li><li>Simulink<span>Learning</span></li></ul></div>
+<div><h3>Robotics</h3><ul>
+<li>ESP32 firmware<span>Working</span></li><li>PID motor control<span>Working</span></li><li>ROS 2<span>Learning</span></li><li>Physical intelligence<span>Exploring</span></li></ul></div>
+</div></div></section>
+
+<section class="contact" id="contact"><div class="wrap">
+<h2>Let's talk</h2>
+<p>Looking for engineering internships and team projects in mechatronics and robotics. Email is the fastest way to reach me.</p>
+<a class="btn solid" href="mailto:you@example.com">you@example.com</a><a class="btn" href="https://github.com/YOUR-USERNAME">GitHub</a><a class="btn" href="https://linkedin.com/in/YOUR-USERNAME">LinkedIn</a>
+</div></section>
+</main>
+<footer><div class="wrap">&copy; <span id="y"></span> Your Name</div></footer>
+
+<script>
+const S='<svg viewBox="0 0 200 140" aria-hidden="true">',E='</svg>';
+const ART={
+rover:S+'<rect class="draw" x="25" y="15" width="150" height="110" rx="4"/><rect class="draw" x="78" y="4" width="44" height="14"/><rect class="draw" x="78" y="122" width="44" height="14"/><rect class="draw" x="82" y="40" width="36" height="60"/><circle class="draw" cx="42" cy="70" r="7"/><rect class="draw" x="174" y="45" width="7" height="50"/>'+E,
+igvc:S+'<path class="draw" d="M10 120C60 120 60 60 110 60S150 20 190 20M10 100C50 100 50 40 100 40S140 0 190 0" style="opacity:.5"/><path class="draw" d="M10 135C70 135 70 80 120 80S160 40 195 40" stroke-dasharray="5 4"/><circle class="draw" cx="40" cy="132" r="4"/><circle class="draw" cx="120" cy="80" r="4"/><circle class="draw" cx="180" cy="44" r="4"/>'+E,
+piston:S+'<path class="draw" d="M60 28h80v84H60zM60 42h80M60 52h80M60 62h80"/><circle class="draw" cx="100" cy="90" r="10"/><path class="draw" d="M100 18v-8M90 10h20M45 70h-12M45 70l-4-3M45 70l-4 3"/>'+E,
+tower:S+'<rect class="draw" x="82" y="8" width="36" height="104" rx="4"/><path class="draw" d="M70 112h60l8 18H62zM90 28h-8M118 48h8M90 68h-8M118 88h8M100 2v6"/><path class="draw" d="M140 30v70m0 0l-4-6m4 6l4-6" stroke-dasharray="4 3"/>'+E,
+cvt:S+'<circle class="draw" cx="62" cy="70" r="30"/><circle class="draw" cx="62" cy="70" r="8"/><circle class="draw" cx="142" cy="70" r="18"/><circle class="draw" cx="142" cy="70" r="5"/><path class="draw" d="M62 40L142 52M62 100L142 88"/>'+E};
+const P=[
+{art:'rover',t:'Rover-1: 2WD autonomous rover',st:'In progress',wip:1,yr:'2026',role:'Solo: CAD, firmware, electronics',tools:'SOLIDWORKS, Bambu A1 mini, Arduino IDE, ESP32',
+ p:'A differential-drive rover I am designing and building end to end, from chassis CAD to closed-loop motor control, to practise the full lifecycle of a mechatronic system.',
+ b:['Designed and 3D printed a 150 x 110 x 4 mm chassis plate and N20 motor brackets','ESP32 firmware with PWM motor control, encoder interrupts, PID speed control, and WiFi teleoperation','Power split across two buck converters: 6 V motor rail and 5 V logic rail','Next: wiring schematic, hardware tuning, then Simulink modelling and ROS 2'],link:'https://github.com/YOUR-USERNAME/Rover-1',lt:'View Rover-1 on GitHub'},
+{art:'igvc',t:'Autonomous rover for IGVC',st:'In progress',wip:1,yr:'2026',role:'Autonomous Rover Subteam member',tools:'<span class="todo">todo: your tools, e.g. CAD, ROS</span>',
+ p:'Part of the robotics association subteam building a new rover for the Intelligent Ground Vehicle Competition (IGVC).',
+ b:['<span class="todo">todo: your subsystem, e.g. drivetrain, chassis, sensing</span>','<span class="todo">todo: one measurable thing you designed, built, or tested</span>']},
+{art:'piston',t:'Piston machining',st:'Completed',yr:'<span class="todo">todo</span>',role:'Machinist',tools:'<span class="todo">todo: lathe, mill, materials</span>',
+ p:'Machined a piston from raw stock, working from drawing to finished part.',
+ b:['<span class="todo">todo: material and key tolerances</span>','<span class="todo">todo: operations you ran and a problem you solved</span>','<span class="todo">todo: result, e.g. fit or inspection outcome</span>']},
+{art:'tower',t:'Hydroponic tower redesign',st:'Completed',yr:'<span class="todo">todo</span>',role:'<span class="todo">todo: role</span>',tools:'<span class="todo">todo: CAD and fabrication tools</span>',
+ p:'Redesigned an existing hydroponic growing tower to improve it.',
+ b:['<span class="todo">todo: the problem with the original design</span>','<span class="todo">todo: what you changed and why</span>','<span class="todo">todo: measurable improvement</span>']},
+{art:'cvt',t:'CVT drivetrain teaching model',st:'In progress',wip:1,yr:'2026',role:'Team of four, MIE243',tools:'SOLIDWORKS, weighted decision matrix',
+ p:'A low-cost, modular teaching model that shows how a continuously variable transmission works, so students can swap parts and see how behaviour changes.',
+ b:['Chose the CVT from researched drivetrain options using a documented weighted decision matrix','Constraints: no electronics, modular parts, SOLIDWORKS and sketches only']}];
+document.getElementById('list').innerHTML=P.map(x=>`<article class="sheet"><figure>${ART[x.art]}</figure><div class="body"><h3>${x.t}</h3><p>${x.p}</p><ul>${x.b.map(i=>`<li>${i}</li>`).join('')}</ul>
+<dl class="tb"><dt>Status</dt><dd><span class="st ${x.wip?'wip':''}">${x.st}</span></dd><dt>Year</dt><dd class="mono">${x.yr}</dd><dt>Role</dt><dd>${x.role}</dd><dt>Tools</dt><dd>${x.tools}</dd></dl>${x.link?`<p style="margin:16px 0 0"><a href="${x.link}">${x.lt}</a></p>`:''}</div></article>`).join('');
+document.getElementById('y').textContent=new Date().getFullYear();
+</script>
+</body>
+</html>
