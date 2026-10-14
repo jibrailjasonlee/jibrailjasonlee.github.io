@@ -4,34 +4,40 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Jason Lee | Mechanical Engineering Portfolio</title>
-<meta name="description" content="Jason Lee — Mechanical engineering student at the University of Toronto focused on mechatronics, CAD, machining, firmware, and control.">
+<meta name="description" content="Jason Lee — Mechanical engineering student at the University of Toronto focused on robotics, mechatronics, CAD, and embedded systems.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root{
-  --paper:#F7FAFC;--card:#ffffff;--ink:#0f1720;--muted:#56626e;--accent:#1158f0;--accent-2:#1f8fff;--glass: rgba(255,255,255,0.6);
-  --success:#0f9d58;--amber:#E3A82B;--line:#E6EEF7;--soft-shadow: 0 6px 18px rgba(14,20,30,0.06);
+  --paper:#F7FAFC;--card:#ffffff;--ink:#0f1720;--muted:#56626e;--accent:#1158f0;--line:#E6EEF7;--soft-shadow: 0 6px 18px rgba(14,20,30,0.06);
+}
+[data-theme="dark"]{
+  --paper:#0b0f14;--card:#071018;--ink:#e6eef6;--muted:#a8b6c3;--accent:#6fb3ff;--line:rgba(255,255,255,0.04);--soft-shadow: 0 10px 30px rgba(0,0,0,0.6);
 }
 *{box-sizing:border-box;margin:0}
 html{scroll-behavior:smooth}
 body{font:400 17px/1.6 Archivo,system-ui,sans-serif;color:var(--ink);background:linear-gradient(180deg,#f7fbff 0%,var(--paper) 50%);-webkit-font-smoothing:antialiased}
+[data-theme="dark"] body{background:linear-gradient(180deg,#071018 0%,var(--paper) 50%)}
 a{color:var(--accent)}
 .wrap{max-width:1100px;margin:0 auto;padding:0 24px}
 .mono{font-family:"IBM Plex Mono",monospace;font-size:13px}
 nav{position:sticky;top:12px;z-index:60;background:linear-gradient(180deg,rgba(255,255,255,0.85),rgba(255,255,255,0.7));backdrop-filter:blur(6px);border-radius:12px;padding:10px;border:1px solid var(--line);box-shadow:var(--soft-shadow)}
+[data-theme="dark"] nav{background:linear-gradient(180deg,rgba(8,12,16,0.6),rgba(8,12,16,0.5))}
 nav .wrap{display:flex;justify-content:space-between;align-items:center}
 nav b{font-stretch:125%;font-weight:800;font-size:18px}
-nav ul{display:flex;gap:14px;list-style:none;padding:0;align-items:center}
+nav ul{display:flex;gap:10px;list-style:none;padding:0;align-items:center}
 nav a{color:var(--ink);text-decoration:none;padding:8px;border-radius:8px;font-weight:600}
-nav a:hover{background:var(--glass)}
-.btn{display:inline-block;padding:8px 14px;border:1.5px solid var(--ink);border-radius:8px;text-decoration:none;color:var(--ink);font-weight:700;transition:all .18s cubic-bezier(.2,.9,.2,1)}
+nav a:hover{background:rgba(255,255,255,0.06)}
+.btn{display:inline-block;padding:8px 12px;border:1.2px solid var(--line);border-radius:8px;text-decoration:none;color:var(--ink);font-weight:700;transition:all .18s}
 .btn.solid{background:var(--accent);color:#fff;border-color:var(--accent)}
-.btn:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(17,88,240,0.12)}
-.header-hero{margin-top:26px;background:linear-gradient(135deg,rgba(17,88,240,0.06),rgba(31,143,255,0.02));border-radius:12px;padding:36px;border:1px solid var(--line);display:grid;grid-template-columns:1fr 360px;gap:28px;align-items:center}
+.toggle{padding:6px 10px;font-size:14px;cursor:pointer}
+.header-hero{margin-top:26px;background:linear-gradient(135deg,rgba(17,88,240,0.03),rgba(31,143,255,0.01));border-radius:12px;padding:36px;border:1px solid var(--line);display:grid;grid-template-columns:1fr 360px;gap:28px;align-items:center}
+[data-theme="dark"] .header-hero{background:transparent}
 @media(max-width:880px){.header-hero{grid-template-columns:1fr;padding:28px}}
 .profile{display:flex;gap:20px;align-items:center}
-.avatar{width:120px;height:120px;border-radius:14px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:grid;place-items:center;color:#fff;font-weight:800;font-size:28px;box-shadow:0 18px 40px rgba(31,143,255,0.12)}
+/* Black & white profile per request */
+.avatar{width:120px;height:120px;border-radius:14px;background:#fff;display:grid;place-items:center;color:#000;font-weight:800;font-size:28px;border:1px solid #000}
 h1{font-stretch:125%;font-weight:900;font-size:clamp(28px,3.8vw,44px);margin-bottom:6px}
 .lede{margin:14px 0 18px;max-width:54ch;font-size:17px;color:var(--muted)}
 .header-actions{display:flex;gap:10px;margin-top:8px}
@@ -41,7 +47,7 @@ h1{font-stretch:125%;font-weight:900;font-size:clamp(28px,3.8vw,44px);margin-bot
 .project-controls{display:flex;gap:12px;align-items:center}
 .filters{display:flex;gap:8px}
 .filter{padding:6px 10px;border-radius:8px;border:1px solid var(--line);background:#fff;cursor:pointer;font-weight:700}
-.filter.active{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#fff;border:1px solid rgba(0,0,0,0.02)}
+.filter.active{background:var(--accent);color:#fff;border:1px solid rgba(0,0,0,0.02)}
 section{padding:40px 0}
 h2{font-stretch:125%;font-weight:800;font-size:24px;letter-spacing:-.01em;margin-bottom:6px}
 .sub{color:var(--muted);margin-bottom:20px}
@@ -51,8 +57,8 @@ h2{font-stretch:125%;font-weight:800;font-size:24px;letter-spacing:-.01em;margin
 .card:hover{transform:translateY(-6px);box-shadow:0 20px 50px rgba(11,22,36,0.08)}
 .card .meta{display:flex;justify-content:space-between;align-items:center;gap:10px}
 .badge{padding:6px 10px;border-radius:999px;font-weight:800;font-size:13px}
-.badge.wip{background:linear-gradient(90deg,#fff4d6,#ffe6a6);color:#7a5600}
-.badge.ok{background:#E8F7EE;color:var(--success)}
+.badge.wip{background:#fff4d6;color:#7a5600}
+.badge.ok{background:#E8F7EE;color:#0f9d58}
 .card h3{margin:10px 0;font-size:18px}
 .card p{color:var(--muted);font-size:15px}
 .card ul{margin-top:12px;padding-left:18px}
@@ -60,17 +66,16 @@ h2{font-stretch:125%;font-weight:800;font-size:24px;letter-spacing:-.01em;margin
 .card footer{display:flex;justify-content:space-between;align-items:center;margin-top:14px}
 .tools{font-size:13px;color:var(--muted)}
 .art{background:linear-gradient(180deg,rgba(242,247,255,0.5),rgba(255,255,255,0.6));padding:14px;border-radius:8px;border:1px solid var(--line)}
-footer{padding:28px 0;color:var(--muted);font-size:14px}
-.copy{display:flex;justify-content:space-between;gap:16px;align-items:center}
-/* Modal */
-.modal-backdrop{position:fixed;inset:0;background:rgba(4,10,20,0.5);display:none;place-items:center;z-index:120;padding:20px}
-.modal{background:#fff;border-radius:12px;max-width:900px;width:100%;padding:20px;border:1px solid var(--line);box-shadow:0 30px 60px rgba(11,22,36,0.25);max-height:90vh;overflow:auto}
+.modal-backdrop{position:fixed;inset:0;background:rgba(4,10,20,0.6);display:none;place-items:center;z-index:120;padding:20px}
+.modal{background:var(--card);border-radius:12px;max-width:900px;width:100%;padding:20px;border:1px solid var(--line);box-shadow:0 30px 60px rgba(11,22,36,0.25);max-height:90vh;overflow:auto}
 .modal.open{animation:pop .18s cubic-bezier(.2,.9,.2,1)}@keyframes pop{from{transform:scale(.98);opacity:0}to{transform:scale(1);opacity:1}}
 .close{background:transparent;border:0;font-size:18px;cursor:pointer}
+.carousel{display:flex;gap:10px;align-items:center}
+.carousel .frame{min-width:320px;max-width:480px;border-radius:8px;padding:6px;border:1px solid var(--line);background:var(--card)}
+.carousel-controls{display:flex;gap:8px;align-items:center;margin-top:8px}
 .kv{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
 @media(max-width:600px){.kv{grid-template-columns:1fr}}
 .small{font-size:13px;color:var(--muted)}
-/* accessibility focus */
 :focus{outline:3px solid rgba(17,88,240,0.18);outline-offset:3px}
 </style>
 </head>
@@ -81,8 +86,9 @@ footer{padding:28px 0;color:var(--muted);font-size:14px}
     <ul>
       <li><a href="#projects">Projects</a></li>
       <li><a href="#skills">Skills</a></li>
-      <li><a class="btn" href="resume.pdf" aria-label="Download resume">Resume</a></li>
-      <li><a class="btn solid" href="#contact">Contact</a></li>
+      <li><a class="btn" href="resume.html" aria-label="View resume">Resume</a></li>
+      <li><a class="btn" href="#contact">Contact</a></li>
+      <li><button id="theme-toggle" class="btn toggle" aria-pressed="false" title="Toggle dark mode">Dark</button></li>
     </ul>
   </div>
 </nav>
@@ -94,10 +100,10 @@ footer{padding:28px 0;color:var(--muted);font-size:14px}
         <div class="avatar" aria-hidden="true">JL</div>
         <div>
           <h1>Jason Lee</h1>
-          <div class="lede">Mechanical engineering student at the University of Toronto building robust mechatronic systems — from CAD and machining to firmware and control. I design, make, wire, and tune working prototypes that solve real problems.</div>
+          <div class="lede">Mechanical engineering student at the University of Toronto aspiring to be a robotics / mechatronics engineer. I build end-to-end mechatronic systems — CAD, machining, electronics, firmware, and control — and I focus on designs that integrate sensing and control.</div>
           <div class="header-actions" role="group" aria-label="Quick actions">
             <a class="btn solid" href="#projects">See projects</a>
-            <a class="btn" href="mailto:you@example.com">Email</a>
+            <a class="btn" href="mailto:jjason.lee@mail.utoronto.ca">Email</a>
             <a class="btn" href="https://github.com/jibrailjasonlee" target="_blank" rel="noopener">GitHub</a>
           </div>
         </div>
@@ -106,8 +112,8 @@ footer{padding:28px 0;color:var(--muted);font-size:14px}
       <div style="margin-top:16px;display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap">
         <div class="quick-stats" aria-hidden="true">
           <div class="stat"><strong>5+</strong><span class="small">Projects</span></div>
-          <div class="stat"><strong>3</strong><span class="small">Mechanical tools</span></div>
-          <div class="stat"><strong>Embedded</strong><span class="small">ESP32, Arduino</span></div>
+          <div class="stat"><strong>ESP32</strong><span class="small">Embedded</span></div>
+          <div class="stat"><strong>CAD</strong><span class="small">SOLIDWORKS / Fusion</span></div>
         </div>
         <div class="project-controls">
           <div class="filters" role="tablist" aria-label="Filter projects">
@@ -120,12 +126,12 @@ footer{padding:28px 0;color:var(--muted);font-size:14px}
     </div>
 
     <aside class="art" aria-hidden="true">
-      <!-- small decorative svg -->
+      <!-- original-style black & white drawing -->
       <svg viewBox="0 0 260 190" role="img" aria-label="Top view drawing of a two-wheel rover chassis" width="260" height="190">
-        <rect x="60" y="25" width="150" height="110" rx="5" stroke="#0f1720" stroke-width="1.4" fill="none"/>
-        <rect x="105" y="12" width="42" height="14" rx="3" stroke="#0f1720" stroke-width="1.4" fill="none"/>
-        <rect x="108" y="52" width="36" height="56" rx="2" stroke="#0f1720" stroke-width="1.4" fill="none"/>
-        <circle cx="80" cy="80" r="7" stroke="#0f1720" stroke-width="1.2" fill="none"/>
+        <rect x="60" y="25" width="150" height="110" rx="5" stroke="#000" stroke-width="1.4" fill="none"/>
+        <rect x="105" y="12" width="42" height="14" rx="3" stroke="#000" stroke-width="1.4" fill="none"/>
+        <rect x="108" y="52" width="36" height="56" rx="2" stroke="#000" stroke-width="1.4" fill="none"/>
+        <circle cx="80" cy="80" r="7" stroke="#000" stroke-width="1.2" fill="none"/>
       </svg>
       <div style="margin-top:10px;color:var(--muted);font-size:13px;">Selected work: compact autonomous rovers, machining, teaching models.</div>
     </aside>
@@ -133,14 +139,14 @@ footer{padding:28px 0;color:var(--muted);font-size:14px}
 
   <section id="projects">
     <h2>Projects</h2>
-    <p class="sub">I document each project like a drawing sheet: what it is, what I did, and the tools behind it. Click a card for details.</p>
+    <p class="sub">Each project is documented like a drawing sheet: what it is, what I did, and the tools behind it. Click a card for details and scroll through design drawings and photos.</p>
 
     <div id="grid" class="grid" aria-live="polite"></div>
   </section>
 
   <section id="skills">
     <h2>Skills</h2>
-    <p class="sub">Grouped by how I use them today. Learning items are active progress.</p>
+    <p class="sub">Grouped by how I use them today. I emphasise robotics and mechatronics applications.</p>
     <div class="card">
       <div class="kv">
         <div>
@@ -168,9 +174,9 @@ footer{padding:28px 0;color:var(--muted);font-size:14px}
 
   <section id="contact" class="card">
     <h2>Let's talk</h2>
-    <p class="sub">Looking for engineering internships and team projects in mechatronics and robotics. Email is the fastest way to reach me.</p>
+    <p class="sub">Seeking internships and roles in robotics / mechatronics engineering. I welcome opportunities to contribute CAD, embedded control, and system integration skills.</p>
     <div style="display:flex;gap:10px;flex-wrap:wrap">
-      <a class="btn solid" href="mailto:you@example.com">you@example.com</a>
+      <a class="btn solid" href="mailto:jjason.lee@mail.utoronto.ca">jjason.lee@mail.utoronto.ca</a>
       <a class="btn" href="https://github.com/jibrailjasonlee" target="_blank" rel="noopener">GitHub</a>
       <a class="btn" href="https://linkedin.com/in/jibrailjasonlee" target="_blank" rel="noopener">LinkedIn</a>
     </div>
@@ -198,14 +204,26 @@ footer{padding:28px 0;color:var(--muted);font-size:14px}
 </div>
 
 <script>
-// Data and art (kept concise)
-const ART = {
-  rover:`<svg viewBox="0 0 260 190" width="320" height="220" role="img" aria-hidden="true"><rect x="60" y="25" width="150" height="110" rx="5" stroke="#0f1720" stroke-width="1.4" fill="none"/><circle cx="80" cy="80" r="7" stroke="#0f1720" stroke-width="1.2" fill="none"/></svg>`,
-  igvc:`<svg viewBox="0 0 260 190" width="320" height="220" role="img" aria-hidden="true"><path d="M10 120C60 120 60 60 110 60S150 20 190 20" stroke="#0f1720" stroke-width="1.2" fill="none"/></svg>`,
-  piston:`<svg viewBox="0 0 260 190" width="320" height="220" role="img" aria-hidden="true"><rect x="60" y="28" width="80" height="84" stroke="#0f1720" stroke-width="1.2" fill="none"/></svg>`,
-  tower:`<svg viewBox="0 0 260 190" width="320" height="220" role="img" aria-hidden="true"><rect x="82" y="8" width="36" height="104" rx="4" stroke="#0f1720" stroke-width="1.2" fill="none"/></svg>`,
-  cvt:`<svg viewBox="0 0 260 190" width="320" height="220" role="img" aria-hidden="true"><circle cx="62" cy="70" r="30" stroke="#0f1720" stroke-width="1.2" fill="none"/></svg>`
-}
+// Original-style drawings per project (arrays allow multiple images)
+const ARTSETS = {
+  rover: [
+    `<svg viewBox="0 0 260 190" width="520" height="360" role="img" aria-hidden="true"><rect class="draw" x="60" y="25" width="150" height="110" rx="5" stroke="#000" fill="none"/><rect class="draw" x="105" y="12" width="42" height="14" rx="3" stroke="#000" fill="none"/><rect class="draw" x="105" y="134" width="42" height="14" rx="3" stroke="#000" fill="none"/><rect class="draw" x="108" y="52" width="36" height="56" rx="2" stroke="#000" fill="none"/><circle class="draw" cx="80" cy="80" r="7" stroke="#000" fill="none"/></svg>`,
+    `<svg viewBox="0 0 260 190" width="520" height="360" role="img"><path d="M165 60h25v40h-25z" stroke="#000" fill="none"/></svg>`
+  ],
+  igvc: [
+    `<svg viewBox="0 0 260 190" width="520" height="360" role="img"><path d="M10 120C60 120 60 60 110 60S150 20 190 20" stroke="#000" fill="none"/></svg>`,
+    `<svg viewBox="0 0 260 190" width="520" height="360" role="img"><path d="M10 135C70 135 70 80 120 80S160 40 195 40" stroke="#000" fill="none"/></svg>`
+  ],
+  piston: [
+    `<svg viewBox="0 0 260 190" width="520" height="360" role="img"><rect x="60" y="28" width="80" height="84" stroke="#000" fill="none"/><circle cx="100" cy="90" r="10" stroke="#000" fill="none"/></svg>`
+  ],
+  tower: [
+    `<svg viewBox="0 0 260 190" width="520" height="360" role="img"><rect x="82" y="8" width="36" height="104" rx="4" stroke="#000" fill="none"/></svg>`
+  ],
+  cvt: [
+    `<svg viewBox="0 0 260 190" width="520" height="360" role="img"><circle cx="62" cy="70" r="30" stroke="#000" fill="none"/><circle cx="142" cy="70" r="18" stroke="#000" fill="none"/></svg>`
+  ]
+};
 
 const P = [
   {id:'rover',art:'rover',t:'Rover-1: 2WD autonomous rover',st:'In progress',wip:true,yr:'2026',role:'Solo: CAD, firmware, electronics',tools:'SOLIDWORKS, Bambu A1 mini, Arduino IDE, ESP32',
@@ -231,7 +249,7 @@ function render(list){
   grid.innerHTML = list.map(x=>`<article class="card" data-id="${x.id}" data-status="${x.wip? 'wip':'done'}" tabindex="0">
     <div class="meta"><div class="badge ${x.wip? 'wip':'ok'}">${x.wip? 'In progress':'Completed'}</div><div class="small">${x.yr}</div></div>
     <h3>${x.t}</h3>
-    <div class="art">${ART[x.art] || ''}</div>
+    <div class="art">${ARTSETS[x.art][0] || ''}</div>
     <p>${x.p}</p>
     <ul>${x.b.map(i=>`<li>${i}</li>`).join('')}</ul>
     <footer><div class="tools">${x.role} • <span class="mono">${x.tools}</span></div><div><button class="btn" data-open="${x.id}">Details</button></div></footer>
@@ -254,27 +272,84 @@ filters.forEach(btn=>btn.addEventListener('click', ()=>{
   });
 }));
 
-// Modal behavior
+// Modal + carousel behavior
 const modal = document.getElementById('modal');
 const modalBody = document.getElementById('modal-body');
 const modalTitle = document.getElementById('modal-title');
 const modalClose = document.getElementById('modal-close');
+let currentSet = [];
+let currentIndex = 0;
+
+function renderCarousel(set){
+  if(!set || set.length===0) return '';
+  const frames = set.map((s,i)=>`<div class="frame" data-idx="${i}" style="display:${i===0? 'block':'none'}">${s}</div>`).join('');
+  return `<div class="carousel">${frames}</div><div class="carousel-controls"><button class="btn" id="prev">◀</button><div class="small">Image <span id="img-index">1</span> of ${set.length}</div><button class="btn" id="next">▶</button></div>`;
+}
 
 function openModal(id){
   const p = P.find(x=>x.id===id);
   if(!p) return;
   modalTitle.textContent = p.t;
+  currentSet = ARTSETS[p.art] || [];
+  currentIndex = 0;
   modalBody.innerHTML = `
-    <div style=\"display:flex;gap:18px;align-items:flex-start;flex-wrap:wrap\">\n      <div style=\"flex:1 1 320px\">${ART[p.art] || ''}\n      </div>\n      <div style=\"flex:1 1 320px\">\n        <p>${p.p}</p>\n        <h4>Highlights</h4>\n        <ul>${p.b.map(i=>`<li>${i}</li>`).join('')}</ul>\n        <div class=\"kv\">\n          <div><strong>Status</strong><div class=\"small\">${p.wip? 'In progress':'Completed'}</div></div>\n          <div><strong>Year</strong><div class=\"small\">${p.yr}</div></div>\n          <div><strong>Role</strong><div class=\"small\">${p.role}</div></div>\n          <div><strong>Tools</strong><div class=\"small mono\">${p.tools}</div></div>\n        </div>\n      </div>\n    </div>`;
+    <div style="display:flex;gap:18px;align-items:flex-start;flex-wrap:wrap">
+      <div style="flex:1 1 420px">${renderCarousel(currentSet)}</div>
+      <div style="flex:1 1 320px">
+        <p>${p.p}</p>
+        <h4>Highlights</h4>
+        <ul>${p.b.map(i=>`<li>${i}</li>`).join('')}</ul>
+        <div class="kv">
+          <div><strong>Status</strong><div class="small">${p.wip? 'In progress':'Completed'}</div></div>
+          <div><strong>Year</strong><div class="small">${p.yr}</div></div>
+          <div><strong>Role</strong><div class="small">${p.role}</div></div>
+          <div><strong>Tools</strong><div class="small mono">${p.tools}</div></div>
+        </div>
+      </div>
+    </div>`;
+
   modal.style.display = 'grid';
   modal.setAttribute('aria-hidden','false');
-  // trap focus to close button
+  modal.classList.add('open');
+  setupCarouselControls();
   modalClose.focus();
+}
+
+function setupCarouselControls(){
+  const prev = document.getElementById('prev');
+  const next = document.getElementById('next');
+  const idx = document.getElementById('img-index');
+  if(!prev || !next || !idx) return;
+  prev.onclick = ()=>{
+    showImage(currentIndex-1);
+  };
+  next.onclick = ()=>{
+    showImage(currentIndex+1);
+  };
+  // keyboard left/right
+  document.onkeydown = (e)=>{
+    if(e.key==='ArrowLeft') showImage(currentIndex-1);
+    if(e.key==='ArrowRight') showImage(currentIndex+1);
+  };
+}
+
+function showImage(i){
+  if(!currentSet || currentSet.length===0) return;
+  if(i<0) i = currentSet.length-1;
+  if(i>=currentSet.length) i = 0;
+  currentIndex = i;
+  document.querySelectorAll('.frame').forEach(f=>f.style.display='none');
+  const sel = document.querySelector('.frame[data-idx="'+i+'"]');
+  if(sel) sel.style.display='block';
+  const idx = document.getElementById('img-index');
+  if(idx) idx.textContent = (i+1);
 }
 
 function closeModal(){
   modal.style.display = 'none';
   modal.setAttribute('aria-hidden','true');
+  modal.classList.remove('open');
+  document.onkeydown = null;
 }
 
 // Open handlers
@@ -294,14 +369,6 @@ document.addEventListener('keydown', e=>{
   }
 });
 
-// Cards are focusable to open with Enter
-grid.addEventListener('keydown', e=>{
-  if(e.key === 'Enter'){
-    const card = e.target.closest('.card');
-    if(card) openModal(card.dataset.id);
-  }
-});
-
 // attach open buttons from initial render
 function attachOpenButtons(){
   document.querySelectorAll('[data-open]').forEach(b=>b.addEventListener('click', ev=>{
@@ -314,8 +381,26 @@ attachOpenButtons();
 // dynamic year
 document.getElementById('y').textContent = new Date().getFullYear();
 
-// make cards focusable for keyboard users
+// focusable cards for keyboard users
 document.querySelectorAll('#grid .card').forEach(c=>c.setAttribute('tabindex','0'));
+
+// Theme toggle
+const themeToggle = document.getElementById('theme-toggle');
+function setTheme(t){
+  if(t==='dark') document.documentElement.setAttribute('data-theme','dark');
+  else document.documentElement.removeAttribute('data-theme');
+  themeToggle.setAttribute('aria-pressed', t==='dark');
+  themeToggle.textContent = t==='dark'? 'Light' : 'Dark';
+}
+// initialize from localStorage
+const saved = localStorage.getItem('theme');
+if(saved) setTheme(saved);
+themeToggle.addEventListener('click', ()=>{
+  const cur = document.documentElement.getAttribute('data-theme')==='dark' ? 'dark':'light';
+  const next = cur==='dark' ? 'light' : 'dark';
+  setTheme(next);
+  localStorage.setItem('theme', next);
+});
 </script>
 </body>
 </html>
