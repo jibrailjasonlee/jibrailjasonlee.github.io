@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Jason Lee | Mechatronics and Robotics Portfolio</title>
+<title>Jason Lee | Mechanical Engineering Portfolio</title>
 <meta name="description" content="Jason Lee, mechanical engineering student at the University of Toronto building toward a career in mechatronics and robotics.">
 <meta name="color-scheme" content="light dark">
 <script>try{var t=localStorage.getItem('theme')||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');document.documentElement.dataset.theme=t}catch(e){}</script>
@@ -106,12 +106,12 @@ footer{padding:28px 0 40px;color:var(--mute);font-size:14px}
 <body>
 <nav aria-label="Primary"><div class="wrap"><b>Jason Lee</b>
 <ul><li><a href="#projects">Projects</a></li><li><a href="#approach">Approach</a></li><li><a href="#skills">Skills</a></li><li><a href="#contact">Contact</a></li>
-<li><a class="btn" href="resume.html">Resume</a></li><li><button class="btn" id="theme" aria-label="Switch color theme">Dark</button></li></ul></div></nav>
+<li><a class="btn" href="resume.pdf">Resume</a></li><li><button class="btn" id="theme" aria-label="Switch color theme">Dark</button></li></ul></div></nav>
 
 <header class="hero"><div class="wrap">
 <div>
 <p class="eyebrow">Mechanical Engineering, University of Toronto</p>
-<h1>Building toward a career in mechatronics and robotics.</h1>
+<h1>Building towards a career in mechatronics and robotics.</h1>
 <p class="lede">I design the mechanical parts, wire the electronics, and write the firmware that makes a machine sense and move. Right now that means a rover of my own, a competition rover with my robotics team, and a transmission model for class.</p>
 <div class="acts"><a class="btn solid" href="#projects">See my projects</a><a class="btn" href="mailto:jjason.lee@mail.utoronto.ca">Email me</a><a class="btn" href="https://github.com/jibrailjasonlee" target="_blank" rel="noopener">GitHub</a></div>
 </div>
@@ -170,21 +170,21 @@ piston:[S(`<path class="d" d="M110 34h100v26M110 34v26M110 60h100M110 60v126h100
 tower:[S(`<rect class="d" x="130" y="14" width="56" height="150" rx="8"/><path class="d" d="M130 40h-14l-4 10h18M186 70h14l4 10h-18M130 100h-14l-4 10h18M186 130h14l4 10h-18"/><path class="d" d="M100 164h116l10 44H90z"/><path class="m" d="M158 14V4M158 164v-14"/><path class="d" d="M250 190V30h-60" marker-end="url(#ar)" style="stroke-width:1.2"/><rect class="f" x="236" y="176" width="28" height="20" rx="3"/><text class="t" x="74" y="52" text-anchor="end">net pot</text><text class="t" x="210" y="200">reservoir</text><text class="t" x="268" y="120">pump</text><text class="t" x="158" y="222" text-anchor="middle">nutrient flow loop</text>`.replace('<text class="t" x="268" y="120">pump</text>','<text class="t" x="262" y="120">riser</text>'))],
 cvt:[cvt(11,1),cvt(1,11)]};
 const P=[
-{id:'rover',feat:1,t:'Rover-1: 2WD autonomous rover',wip:1,yr:'2026',role:'Solo: CAD, firmware, electronics',tools:'SOLIDWORKS, Bambu A1 mini, Arduino IDE, ESP32',tabs:['Chassis layout','Electrical architecture'],
+{id:'rover',feat:1,t:'Rover-1: 2WD autonomous rover',wip:1,yr:'2026',role:'Solo: CAD, firmware, electronics',tools:'SOLIDWORKS, MATLAB Simulink, Arduino IDE, ESP32',tabs:['Chassis layout','Electrical architecture'],
  p:'A differential-drive rover that I am designing and building end to end: chassis CAD, power, sensing, and closed-loop motor control.',
  b:['Designed and 3D printed a 150 × 110 × 4 mm chassis plate and N20 motor brackets','ESP32 firmware with PWM motor control, encoder interrupts, PID speed control, and WiFi teleoperation','Two buck converters split the battery into a 6 V motor rail and a 5 V logic rail','Next: hardware tuning, then Simulink modelling and ROS 2'],link:'https://github.com/jibrailjasonlee/Rover-1'},
-{id:'igvc',t:'Autonomous rover for IGVC',wip:1,yr:'2026',role:'Autonomous Rover Subteam',tools:'CAD, prototyping, sensors',tabs:['Course','Autonomy stack'],cap:'Illustrative drawing of the competition task',
- p:'Member of the robotics association subteam building a new rover for the Intelligent Ground Vehicle Competition (IGVC).',
- b:['Worked on drivetrain and chassis packaging','Integrated perception sensors and logging','Tested traction solutions on varied terrain']},
-{id:'cvt',t:'CVT drivetrain teaching model',wip:1,yr:'2026',role:'Team of four, MIE243',tools:'SOLIDWORKS, decision matrices',tabs:['Low ratio','High ratio'],cap:'Moving the pulley halves changes the belt radius, so the ratio changes',
+{id:'igvc',t:'Autonomous rover for IGVC',wip:1,yr:'2026',role:'Mechanical Subteam',tools:'CAD, prototyping',tabs:['Course','Autonomy stack'],cap:'Illustrative drawing of the competition task',
+ p:'Member of the University of Toronto Robotics Association mechanical subteam building a new rover for the Intelligent Ground Vehicle Competition (IGVC).',
+ b:['Designing the drivetrain and chassis packaging', 'Conducting FEA in Ansys']},
+{id:'cvt',t:'CVT drivetrain teaching model',wip:1,yr:'2026',role:'Project Manager in a team of four, MIE243',tools:'SOLIDWORKS, decision matrices',tabs:['Low ratio','High ratio'],cap:'Moving the pulley halves changes the belt radius, so the ratio changes',
  p:'A low-cost, modular teaching model that shows how a continuously variable transmission behaves, so students can swap parts and see the effect.',
  b:['Selected the CVT using a documented weighted decision matrix','Designed modular parts for quick swapping and testing','Constraint: no electronics, SOLIDWORKS and sketches only']},
-{id:'piston',t:'Piston machining',wip:0,yr:'2026',role:'Machinist',tools:'Lathe, endmill, steel',tabs:['Part section','Process'],cap:'Illustrative section view',
- p:'Machined a piston from raw stock, working from drawing to finished part.',
- b:['Selected material and established key tolerances','Planned and ran lathe and mill operations','Achieved the specified fit within tolerance limits']},
-{id:'tower',t:'Hydroponic tower redesign',wip:0,yr:'2026',role:'Designer',tools:'SOLIDWORKS, 3D printing',tabs:['Flow loop'],cap:'Illustrative layout',
- p:'Redesigned a hydroponic tower to improve maintenance and nutrient flow.',
- b:['Analyzed weaknesses of the original design','Redesigned for easier assembly and better nutrient flow','Add a measured result here, for example assembly time saved']}];
+{id:'piston',t:'Pneumatic Piston machining',wip:0,yr:'2026',role:'Machinist',tools:'Lathe, endmill, steel',tabs:['Part section','Process'],cap:'Illustrative section view',
+ p:'Machined a pneumatic piston from raw stock, working from drawing to finished part.',
+ b:['Selected material and established key tolerances','Planned and ran lathe and mill operations','Achieved the specified fit within tolerance limits','Used compressed air to demonstrate automated cyclical motion']},
+{id:'tower',t:'Client-based Hydroponic tower redesign',wip:0,yr:'2026',role:'Designer',tools:'SOLIDWORKS, 3D printing',tabs:['Flow loop'],cap:'Illustrative layout',
+ p:'Redesigned a hydroponic tower to improve maintenance and nutrient flow, all while eliminating leakage within the service environment.',
+ b:['Managed a 6-person team','Analyzed weaknesses of the original design','Redesigned for easier assembly and better nutrient flow','0 mL leakage through iterative design refinement and hydrostatic load testing']}];
 document.getElementById('hero-art').innerHTML=ART.rover[0];
 document.getElementById('grid').innerHTML=P.map(x=>`<article class="proj${x.feat?' feat':''}" id="${x.id}"><div class="vis"><div data-art>${ART[x.id][0]}</div>${x.tabs.length>1?`<div class="tabs" role="tablist" aria-label="${x.t} drawings">${x.tabs.map((n,i)=>`<button class="tab" role="tab" data-i="${i}" aria-selected="${i==0}">${n}</button>`).join('')}</div>`:''}${x.cap?`<p class="cap">${x.cap}</p>`:''}</div>
 <div class="info"><div class="top"><span class="badge${x.wip?' wip':''}">${x.wip?'In progress':'Completed'}</span><span>${x.yr}</span></div><h3>${x.t}</h3><p>${x.p}</p><ul>${x.b.map(i=>`<li>${i}</li>`).join('')}</ul>
