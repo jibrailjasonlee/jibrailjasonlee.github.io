@@ -69,6 +69,13 @@ h2{font-size:clamp(28px,3.6vw,38px);margin-bottom:10px}
 .tab{font:500 13px Inter,sans-serif;padding:5px 12px;border-radius:99px;border:1px solid var(--line);background:var(--card);color:var(--mute);cursor:pointer}
 .tab[aria-selected=true]{background:var(--ink);color:var(--onink);border-color:var(--ink)}
 .cap{color:var(--mute);font-size:12.5px}
+.pv{position:relative;width:100%;aspect-ratio:5/4;min-height:280px;border-radius:12px;overflow:hidden;background:var(--soft)}
+.pv-canvas{position:absolute;inset:0;width:100%;height:100%;display:block;cursor:grab;outline-offset:-3px}
+.pv-canvas:active{cursor:grabbing}
+.pv-tags{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.pv-tag{position:absolute;left:0;top:0;font:500 11.5px Inter,sans-serif;color:var(--ink);background:color-mix(in srgb,var(--card) 92%,transparent);border:1px solid var(--line);border-radius:99px;padding:2px 9px;white-space:nowrap;opacity:0;transition:opacity .3s;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+.pv-hint{position:absolute;left:0;right:0;bottom:8px;text-align:center;font-size:11.5px;color:var(--mute);pointer-events:none;transition:opacity .5s;letter-spacing:.02em}
+.proj:not(.feat) .pv{aspect-ratio:4/3;min-height:0}
 .info{padding:24px;flex:1}
 .top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;font-size:13px;color:var(--mute)}
 .badge{display:inline-flex;align-items:center;gap:7px;font-weight:500;color:var(--ink)}
@@ -314,6 +321,7 @@ html{scroll-behavior:auto}
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script src="assets/model-viewer.js" defer></script>
+<script src="assets/project-models.js" defer></script>
 <script src="assets/robot-cell.js" defer></script>
 <script src="assets/robot-cell-3d.js" defer></script>
 <dialog class="viewer" id="viewer" aria-labelledby="v-title">
@@ -364,7 +372,10 @@ const P=[
 {id:'piston',imgs:[{src:'assets/pneumatic-piston/01-finished-piston-assembly.jpg',th:'assets/pneumatic-piston/01-finished-piston-assembly-thumb.jpg',cap:'The finished machined piston assembly',alt:'Machined piston with three grooves above a connecting rod and crank disc, mounted on a steel upright and base plate with a steel flywheel behind'},{src:'assets/pneumatic-piston/02-finished-piston-assembly-side.jpg',th:'assets/pneumatic-piston/02-finished-piston-assembly-side-thumb.jpg',cap:'The finished assembly from the other side',alt:'Close view of the grooved aluminum piston, rod, crank disc and socket-head screws on the steel upright, with the flywheel at the back right'}],t:'Pneumatic Piston machining',wip:0,yr:'2026',ctx:'George Brown College basic machining course',role:'Machinist',tools:'Lathe, facing, milling',tabs:['Part section','Process'],cap:'Schematic thumbnail. Open the photos for the finished part.',
  p:'Machined a pneumatic piston from raw stock, working from drawing to finished part.',
  b:['Selected material and established key tolerances','Planned and ran lathe and mill operations','Achieved the specified fit within tolerance limits','Used compressed air to demonstrate automated cyclical motion']}];
-const cardHTML=(x,detail)=>`<article class="proj${x.feat||detail?' feat':''}" data-id="${x.id}"${detail?'':` id="${x.id}"`}><div class="vis"><div data-art${x.imgs?' class="zoom"':''}>${ART[x.id][0]}</div>${(x.tabs.length>1||x.imgs)?`<div class="vbar">${x.tabs.length>1?`<div class="tabs" role="tablist" aria-label="${x.t} drawings">${x.tabs.map((n,i)=>`<button class="tab" role="tab" data-i="${i}" aria-selected="${i==0}">${n}</button>`).join('')}</div>`:'<span></span>'}${x.imgs?`<button class="btn sm" type="button" data-view="${x.id}">View ${x.imgs.filter(m=>!m.model).length} photos${x.imgs.some(m=>m.model)?' and 3D model':''}</button>`:''}</div>`:''}${x.cap?`<p class="cap">${x.cap}</p>`:''}</div>
+const use3d=x=>!!(window.PM&&PM.supported()&&PM.models[x.id]);
+const tabsOf=x=>use3d(x)?PM.models[x.id].states.map(s=>s.label):x.tabs;
+const capOf=x=>use3d(x)?PM.models[x.id].cap+(x.imgs?' The viewer button opens the real photos.':''):x.cap;
+const cardHTML=(x,detail)=>`<article class="proj${x.feat||detail?' feat':''}" data-id="${x.id}"${detail?'':` id="${x.id}"`}><div class="vis">${use3d(x)?`<div class="pv" data-art data-pv="${x.id}"></div>`:`<div data-art${x.imgs?' class="zoom"':''}>${ART[x.id][0]}</div>`}${(tabsOf(x).length>1||x.imgs)?`<div class="vbar">${tabsOf(x).length>1?`<div class="tabs" role="tablist" aria-label="${x.t} model views">${tabsOf(x).map((n,i)=>`<button class="tab" role="tab" data-i="${i}" aria-selected="${i==0}">${n}</button>`).join('')}</div>`:'<span></span>'}${x.imgs?`<button class="btn sm" type="button" data-view="${x.id}">View ${x.imgs.filter(m=>!m.model).length} photos${x.imgs.some(m=>m.model)?' and 3D model':''}</button>`:''}</div>`:''}${capOf(x)?`<p class="cap">${capOf(x)}</p>`:''}</div>
 <div class="info"><div class="top"><span class="badge${x.wip?' wip':''}">${x.st||(x.wip?'In progress':'Completed')}</span><span>${x.yr}</span></div><h3>${x.t}</h3><p>${x.p}</p><ul>${x.b.map(i=>`<li>${i}</li>`).join('')}</ul>
 <dl class="spec"><dt>Context</dt><dd>${x.ctx}</dd><dt>Role</dt><dd>${x.role}</dd><dt>Tools</dt><dd class="mono">${x.tools}</dd></dl>${x.link?`<a class="btn solid" href="${x.link}" target="_blank" rel="noopener">View code on GitHub</a>`:''}</div></article>`;
 
@@ -391,10 +402,14 @@ dlg.addEventListener('keydown',e=>{if(e.key==='ArrowLeft'){e.preventDefault();vG
 document.getElementById('v-close').onclick=()=>dlg.close();
 dlg.addEventListener('click',e=>{if(e.target===dlg)dlg.close()});
 dlg.addEventListener('close',()=>{document.body.style.overflow='';v3.forEach(s=>s&&s.api&&s.api.destroy());v3=[];vTrack.innerHTML='';if(vOpener)vOpener.focus()});
-function bindCard(el){const x=P.find(p=>p.id===el.dataset.id);
- el.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{el.querySelectorAll('.tab').forEach(b=>b.setAttribute('aria-selected',b===t));el.querySelector('[data-art]').innerHTML=ART[x.id][t.dataset.i]});
- const vb=el.querySelector('[data-view]');if(vb)vb.onclick=()=>openViewer(x.id,vb);
- const z=el.querySelector('[data-art].zoom');if(z)z.onclick=()=>openViewer(x.id,vb)}
+function bindCard(el){const x=P.find(p=>p.id===el.dataset.id),art=el.querySelector('[data-art]');let pv=null;
+ const fb=()=>{pv=null;art.className=x.imgs?'zoom':'';art.removeAttribute('data-pv');art.innerHTML=ART[x.id][0];
+  el.querySelectorAll('.tab').forEach((t,i)=>{t.hidden=!x.tabs[i];if(x.tabs[i])t.textContent=x.tabs[i]});
+  const c=el.querySelector('.cap');if(c&&x.cap)c.textContent=x.cap;if(x.imgs)art.onclick=()=>openViewer(x.id,el.querySelector('[data-view]'))};
+ if(art.dataset.pv){pv=PM.createPartsViewer(art,x.id,{onFail:fb});if(pv)el._pv=pv;else fb()}
+ el.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{el.querySelectorAll('.tab').forEach(b=>b.setAttribute('aria-selected',b===t));
+  if(pv)pv.setState(+t.dataset.i);else art.innerHTML=ART[x.id][t.dataset.i]||ART[x.id][0]});
+ const vb=el.querySelector('[data-view]');if(vb)vb.onclick=()=>openViewer(x.id,vb)}
 const $=id=>document.getElementById(id);
 const SHORT={rover:'Rover-1',myo:'Myo-hand',rsx:'RSX mount',igvc:'UTRA rover',cvt:'CVT model',tower:'Hydroponics',piston:'Piston'};
 const HOOKS={rover:'A robot I am designing end to end: chassis, electronics and firmware.',myo:'A low-cost robotic hand, designed around the objects it has to hold.',rsx:'Giving a space-robotics arm a second pair of eyes.',igvc:'The drivetrain of a rover built for an autonomous-vehicle competition.',cvt:'A transmission you can watch work, built to teach.',tower:'Zero leaks, and a spot on the showcase stage.',piston:'From raw stock to a moving part, cut on a lathe and a mill.'};
@@ -406,6 +421,7 @@ function renderNext(id){const i=P.findIndex(p=>p.id===id),nx=P.map((_,k)=>P[(i+1
  $('next-up').innerHTML=nx?`<div><span class="mono">UP NEXT</span><b>${nx.t}</b><span>${HOOKS[nx.id]}</span></div><button class="btn solid" type="button" data-pick="${nx.id}">Inspect ${SHORT[nx.id]} &#8593;</button>`
  :`<div><span class="mono">ACHIEVEMENT UNLOCKED</span><b>Full inspection complete</b><span>That is everything I am working on right now. If it looks like a fit, let us talk.</span></div><div class="acts"><a class="btn solid" href="#contact">Get in touch</a><button class="btn" type="button" data-pick="rover">Start over</button></div>`}
 function showDetail(id){const x=P.find(p=>p.id===id),i=P.indexOf(x);shown=id;
+ detail.querySelectorAll('.proj').forEach(c=>c._pv&&c._pv.destroy());
  detail.innerHTML=cardHTML(x,true);bindCard(detail.firstElementChild);
  detail.classList.remove('reveal-in');void detail.offsetWidth;detail.classList.add('reveal-in');
  $('file-tag').textContent='File '+String(i+1).padStart(2,'0')+' / '+String(P.length).padStart(2,'0')+' · '+SHORT[id];renderNext(id)}

@@ -220,6 +220,10 @@
       frus: mesh(gl, cylGeo(32, 0.45)[0], cylGeo(32, 0.45)[1]), cone: mesh(gl, cylGeo(32, 0.35)[0], cylGeo(32, 0.35)[1]),
       sph: mesh(gl, sphGeo(14, 20)[0], sphGeo(14, 20)[1]), quad: mesh(gl, quadGeo()[0], quadGeo()[1])
     };
+    if (window.PM) { // flat-shaded hex prisms and exact cone-pair taper from the shared model library
+      var pg = PM.geo.prism(6, 1), pc = PM.geo.prism(6, 0.3), pf = PM.geo.cyl(40, 22.5 / 52.5);
+      G.hex = mesh(gl, pg[0], pg[1]); G.hexc = mesh(gl, pc[0], pc[1]); G.frus = mesh(gl, pf[0], pf[1]);
+    }
 
     // --- DOM ---------------------------------------------------------------------------------
     o.mount.innerHTML = '';
@@ -233,7 +237,7 @@
     var anim = !reduce;
     var items = o.items.map(function (it, i) {
       var phi = PHIS[i] * A;
-      return { id: it.id, name: it.name, i: i, hx: RING * sin(phi), hz: RING * cos(phi), x: RING * sin(phi), y: 0, z: RING * cos(phi), model: MODELS[it.id](),
+      return { id: it.id, name: it.name, i: i, hx: RING * sin(phi), hz: RING * cos(phi), x: RING * sin(phi), y: 0, z: RING * cos(phi), model: (window.PM && PM.cellParts(it.id)) || MODELS[it.id](),
         spin: i * 1.3, ba: 0.03, hl: 0, fix: false, done: false };
     });
     var byId = {}; items.forEach(function (it) { byId[it.id] = it; });
@@ -275,7 +279,7 @@
 
     // --- drawing list ---------------------------------------------------------------------------
     var list = [];
-    var col = function (c) { return typeof c === 'string' ? pal[c] : c; };
+    var col = function (c) { return typeof c === 'string' ? (pal[c] || (window.PM && PM.FIXED[c]) || pal.mid) : c; };
     function add(prim, M, c, spec, shin, noShadow) { list.push({ p: prim, M: M, c: col(c), s: spec == null ? 0.12 : spec, sh: shin || 20, ns: noShadow }); }
     function addParts(parts, base) { for (var i = 0; i < parts.length; i++) add(parts[i].p, mul(base, parts[i].M), parts[i].c, 0.1, 18); }
     var cylY = function (F, y0, r, h, c, spec) { add('cyl', chain(F, T(0, y0, 0), Sc(r, h, r)), c, spec == null ? 0.25 : spec, 30); };
