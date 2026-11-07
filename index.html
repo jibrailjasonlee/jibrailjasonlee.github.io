@@ -32,7 +32,7 @@ nav li a:hover{color:var(--ink);background:var(--soft)}
 .btn.solid{background:var(--ink);color:var(--onink);border-color:var(--ink)}
 .btn.solid:hover{opacity:.88}
 nav .btn{padding:7px 14px}
-.hero{padding:72px 0 56px}
+.hero{padding:48px 0 28px}
 .hero .wrap{display:grid;grid-template-columns:1.15fr 1fr;gap:56px;align-items:center}
 .eyebrow{color:var(--mute);font-weight:500;margin-bottom:18px}
 h1{font-size:clamp(36px,5.2vw,58px)}
@@ -132,6 +132,39 @@ dialog.viewer::backdrop{background:rgba(0,0,0,.62)}
 .v3d.failed .v3d-fail{display:block}
 .v3d.failed canvas,.v3d.failed .btn,.v3d.failed .v3d-hint{display:none}
 @media(max-width:520px){.v3d-hint{display:none}.vnav{width:38px;height:38px}.vnav.prev{left:6px}.vnav.next{right:6px}.vslide{padding:6px}}
+.head.row{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap}
+.seg-group{display:inline-flex;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--card)}
+.seg{font:500 14px Inter,sans-serif;padding:8px 14px;border:0;background:transparent;color:var(--mute);cursor:pointer}
+.seg[aria-pressed=true]{background:var(--ink);color:var(--onink)}
+.cell{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden;margin-bottom:24px}
+.cell-scroll{overflow-x:auto;background:var(--soft);border-bottom:1px solid var(--line);scrollbar-width:thin}
+.cell-scroll svg{min-width:760px}
+.cell-bar{padding:14px 16px 10px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.cell-bar .lab{color:var(--mute);font-size:13.5px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{display:inline-flex;gap:8px;align-items:baseline;font:500 14px Inter,sans-serif;padding:7px 12px;border-radius:99px;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+.chip .mono{font-size:11px;color:var(--mute)}
+.chip:hover{border-color:var(--ink)}
+.chip[aria-pressed=true]{background:var(--ink);color:var(--onink);border-color:var(--ink)}
+.chip[aria-pressed=true] .mono{color:inherit;opacity:.7}
+.tele{margin:0;padding:0 16px 14px;color:var(--mute);display:flex;gap:10px;align-items:center;font-size:12px;overflow:hidden}
+.tv{white-space:pre}
+.led{width:8px;height:8px;border-radius:50%;background:var(--ok);flex:none}
+.cell[data-state=moving] .led{background:var(--wip)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.rc-gl{fill:none;stroke:var(--line);stroke-width:.7}
+.rc-item{cursor:pointer}
+.rc-item .blk{fill:var(--card);stroke:var(--ink);stroke-width:1.5}
+.rc-item:hover .blk,.rc-item.hot .blk{stroke-width:2.6}
+.rc-item.on .blk{stroke-width:2.6}
+.rc-car{fill:var(--ink)}
+.rc-lo{fill:none;stroke:var(--ink);stroke-width:16;stroke-linecap:round}
+.rc-li{fill:none;stroke:var(--card);stroke-width:9;stroke-linecap:round}
+.rc-hub{fill:var(--card);stroke:var(--ink);stroke-width:3}
+.rc-gr{fill:var(--ink)}
+.detail{transition:opacity .25s}
+.detail.busy{opacity:.4}
+@media(max-width:520px){.tele{display:none}.cell-bar{padding-bottom:14px}}
 @media(max-width:900px){.hero .wrap,.grid,.skills{grid-template-columns:1fr}.loop{grid-template-columns:1fr 1fr}.proj.feat{flex-direction:column}.proj.feat .vis{border-right:0;border-bottom:1px solid var(--line)}nav li:nth-child(-n+4){display:none}.contact .box{padding:32px}}
 @media(max-width:520px){.loop{grid-template-columns:1fr}}
 @media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
@@ -151,12 +184,23 @@ dialog.viewer::backdrop{background:rgba(0,0,0,.62)}
 <div class="acts"><a class="btn solid" href="#projects">See my projects</a><a class="btn" href="mailto:jjason.lee@mail.utoronto.ca">Email me</a><a class="btn" href="https://github.com/jibrailjasonlee" target="_blank" rel="noopener">GitHub</a></div>
 </div>
 <div class="panel">
-<figure><div id="hero-art"></div><figcaption>Rover-1 chassis layout, 150 × 110 mm plate</figcaption></figure>
 <dl class="facts"><dt>Seeking</dt><dd>Robotics and mechatronics internships</dd><dt>Strengths</dt><dd>CAD, 3D printing, ESP32 firmware, PID control</dd><dt>Learning</dt><dd>ROS 2, Simulink, FEA</dd><dt>Building now</dt><dd>Rover-1, Myo-hand, RSX camera mount, UTRA rover</dd></dl>
 </div>
 </div></header>
 
 <main>
+<section id="projects" style="padding-top:24px"><div class="wrap">
+<div class="head row"><div><h2>Pick a project</h2><p class="sub">A small pick-and-place cell I drew for this page. Hover to guide the arm, then click a part (or choose one below) and it fetches the project to the inspection stage.</p></div>
+<div class="seg-group" role="group" aria-label="Project view"><button class="seg" type="button" id="v-cell" aria-pressed="true">Robot cell</button><button class="seg" type="button" id="v-all" aria-pressed="false">All projects</button></div></div>
+<div id="cell-view">
+<div class="cell" id="cell" data-state="idle"><div class="cell-scroll" id="cell-scroll"><div id="cell-svg"></div></div>
+<div class="cell-bar"><span class="lab">Pick a part</span><div class="chips" id="chips" role="group" aria-label="Choose a project for the arm to pick"></div></div>
+<p class="tele mono" id="tele" aria-hidden="true"><span class="led"></span><span class="tv"></span></p><p class="sr" id="cell-live" aria-live="polite"></p></div>
+<div class="detail" id="detail"></div>
+</div>
+<div id="grid-view" hidden><div class="grid" id="grid"></div></div>
+</div></section>
+
 <section id="approach" style="padding-top:24px"><div class="wrap">
 <div class="head"><h2>The mechatronic loop</h2><p class="sub">Robots work when the mechanics, electronics, and software are designed together. My projects practise each part of that loop.</p></div>
 <div class="loop">
@@ -165,11 +209,6 @@ dialog.viewer::backdrop{background:rgba(0,0,0,.62)}
 <div><h3>Control</h3><p>Closed-loop firmware that holds a speed or follows a command.</p><small>PID speed control and encoder interrupts on an ESP32</small></div>
 <div><h3>Integrate</h3><p>Power, wiring, and communication that make the pieces one system.</p><small>6 V and 5 V rails, WiFi teleoperation, servo pan-tilt camera mount</small></div>
 </div></div></section>
-
-<section id="projects" style="padding-top:24px"><div class="wrap">
-<div class="head"><h2>Projects</h2><p class="sub">Drawings show the layout and architecture of each build. Use the tabs on each project to switch views.</p></div>
-<div class="grid" id="grid"></div>
-</div></section>
 
 <section id="skills" style="padding-top:24px"><div class="wrap">
 <div class="head"><h2>Skills</h2><p class="sub">Grouped by how I use them in robotics and mechatronics work.</p></div>
@@ -190,6 +229,7 @@ dialog.viewer::backdrop{background:rgba(0,0,0,.62)}
 <footer><div class="wrap">&copy; <span id="y"></span> Jason Lee</div></footer>
 
 <script src="assets/model-viewer.js" defer></script>
+<script src="assets/robot-cell.js" defer></script>
 <dialog class="viewer" id="viewer" aria-labelledby="v-title">
 <div class="vhead"><h3 id="v-title"></h3><div class="r"><span id="v-count" aria-live="polite"></span><button class="btn sm" id="v-close" type="button" aria-label="Close photos">Close</button></div></div>
 <div class="vstage"><div class="vtrack" id="v-track" tabindex="0" role="group" aria-roledescription="carousel" aria-label="Project photos"></div>
@@ -238,11 +278,9 @@ const P=[
 {id:'piston',imgs:[{src:'assets/pneumatic-piston/01-finished-piston-assembly.jpg',th:'assets/pneumatic-piston/01-finished-piston-assembly-thumb.jpg',cap:'The finished machined piston assembly',alt:'Machined piston with three grooves above a connecting rod and crank disc, mounted on a steel upright and base plate with a steel flywheel behind'},{src:'assets/pneumatic-piston/02-finished-piston-assembly-side.jpg',th:'assets/pneumatic-piston/02-finished-piston-assembly-side-thumb.jpg',cap:'The finished assembly from the other side',alt:'Close view of the grooved aluminum piston, rod, crank disc and socket-head screws on the steel upright, with the flywheel at the back right'}],t:'Pneumatic Piston machining',wip:0,yr:'2026',ctx:'George Brown College basic machining course',role:'Machinist',tools:'Lathe, facing, milling',tabs:['Part section','Process'],cap:'Schematic thumbnail. Open the photos for the finished part.',
  p:'Machined a pneumatic piston from raw stock, working from drawing to finished part.',
  b:['Selected material and established key tolerances','Planned and ran lathe and mill operations','Achieved the specified fit within tolerance limits','Used compressed air to demonstrate automated cyclical motion']}];
-document.getElementById('hero-art').innerHTML=ART.rover[0];
-document.getElementById('grid').innerHTML=P.map(x=>`<article class="proj${x.feat?' feat':''}" id="${x.id}"><div class="vis"><div data-art${x.imgs?' class="zoom"':''}>${ART[x.id][0]}</div>${(x.tabs.length>1||x.imgs)?`<div class="vbar">${x.tabs.length>1?`<div class="tabs" role="tablist" aria-label="${x.t} drawings">${x.tabs.map((n,i)=>`<button class="tab" role="tab" data-i="${i}" aria-selected="${i==0}">${n}</button>`).join('')}</div>`:'<span></span>'}${x.imgs?`<button class="btn sm" type="button" data-view="${x.id}">View ${x.imgs.filter(m=>!m.model).length} photos${x.imgs.some(m=>m.model)?' and 3D model':''}</button>`:''}</div>`:''}${x.cap?`<p class="cap">${x.cap}</p>`:''}</div>
+const cardHTML=(x,detail)=>`<article class="proj${x.feat||detail?' feat':''}" data-id="${x.id}"${detail?'':` id="${x.id}"`}><div class="vis"><div data-art${x.imgs?' class="zoom"':''}>${ART[x.id][0]}</div>${(x.tabs.length>1||x.imgs)?`<div class="vbar">${x.tabs.length>1?`<div class="tabs" role="tablist" aria-label="${x.t} drawings">${x.tabs.map((n,i)=>`<button class="tab" role="tab" data-i="${i}" aria-selected="${i==0}">${n}</button>`).join('')}</div>`:'<span></span>'}${x.imgs?`<button class="btn sm" type="button" data-view="${x.id}">View ${x.imgs.filter(m=>!m.model).length} photos${x.imgs.some(m=>m.model)?' and 3D model':''}</button>`:''}</div>`:''}${x.cap?`<p class="cap">${x.cap}</p>`:''}</div>
 <div class="info"><div class="top"><span class="badge${x.wip?' wip':''}">${x.st||(x.wip?'In progress':'Completed')}</span><span>${x.yr}</span></div><h3>${x.t}</h3><p>${x.p}</p><ul>${x.b.map(i=>`<li>${i}</li>`).join('')}</ul>
-<dl class="spec"><dt>Context</dt><dd>${x.ctx}</dd><dt>Role</dt><dd>${x.role}</dd><dt>Tools</dt><dd class="mono">${x.tools}</dd></dl>${x.link?`<a class="btn solid" href="${x.link}" target="_blank" rel="noopener">View code on GitHub</a>`:''}</div></article>`).join('');
-document.querySelectorAll('.proj').forEach(el=>{const x=P.find(p=>p.id===el.id);el.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{el.querySelectorAll('.tab').forEach(b=>b.setAttribute('aria-selected',b===t));el.querySelector('[data-art]').innerHTML=ART[x.id][t.dataset.i]})});
+<dl class="spec"><dt>Context</dt><dd>${x.ctx}</dd><dt>Role</dt><dd>${x.role}</dd><dt>Tools</dt><dd class="mono">${x.tools}</dd></dl>${x.link?`<a class="btn solid" href="${x.link}" target="_blank" rel="noopener">View code on GitHub</a>`:''}</div></article>`;
 
 const dlg=document.getElementById('viewer'),vTrack=document.getElementById('v-track'),vThumbs=document.getElementById('v-thumbs'),vCap=document.getElementById('v-cap'),vCount=document.getElementById('v-count'),vPrev=document.getElementById('v-prev'),vNext=document.getElementById('v-next');
 const reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
@@ -267,8 +305,30 @@ dlg.addEventListener('keydown',e=>{if(e.key==='ArrowLeft'){e.preventDefault();vG
 document.getElementById('v-close').onclick=()=>dlg.close();
 dlg.addEventListener('click',e=>{if(e.target===dlg)dlg.close()});
 dlg.addEventListener('close',()=>{document.body.style.overflow='';v3.forEach(s=>s&&s.api&&s.api.destroy());v3=[];vTrack.innerHTML='';if(vOpener)vOpener.focus()});
-document.querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>openViewer(b.dataset.view,b));
-document.querySelectorAll('[data-art].zoom').forEach(a=>a.onclick=()=>openViewer(a.closest('.proj').id,a.closest('.vis').querySelector('[data-view]')));
+function bindCard(el){const x=P.find(p=>p.id===el.dataset.id);
+ el.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{el.querySelectorAll('.tab').forEach(b=>b.setAttribute('aria-selected',b===t));el.querySelector('[data-art]').innerHTML=ART[x.id][t.dataset.i]});
+ const vb=el.querySelector('[data-view]');if(vb)vb.onclick=()=>openViewer(x.id,vb);
+ const z=el.querySelector('[data-art].zoom');if(z)z.onclick=()=>openViewer(x.id,vb)}
+const detail=document.getElementById('detail'),SHORT={rover:'Rover-1',myo:'Myo-hand',rsx:'RSX mount',igvc:'UTRA rover',cvt:'CVT model',tower:'Hydroponics',piston:'Piston'};
+let shown=null,gridDone=false;
+function showDetail(id){if(shown===id)return;shown=id;detail.innerHTML=cardHTML(P.find(p=>p.id===id),true);bindCard(detail.firstElementChild)}
+function setView(all){document.getElementById('cell-view').hidden=all;document.getElementById('grid-view').hidden=!all;
+ document.getElementById('v-cell').setAttribute('aria-pressed',!all);document.getElementById('v-all').setAttribute('aria-pressed',all);
+ if(all&&!gridDone){gridDone=true;const g=document.getElementById('grid');g.innerHTML=P.map(x=>cardHTML(x)).join('');g.querySelectorAll('.proj').forEach(bindCard)}}
+document.getElementById('v-cell').onclick=()=>setView(false);document.getElementById('v-all').onclick=()=>setView(true);
+const hashId=P.some(p=>'#'+p.id===location.hash)?location.hash.slice(1):'rover';
+showDetail(hashId);
+addEventListener('DOMContentLoaded',()=>{
+ if(!window.initRobotCell){setView(true);return}
+ const cellEl=document.getElementById('cell');
+ window.cell=initRobotCell({root:cellEl,mount:document.getElementById('cell-svg'),scroller:document.getElementById('cell-scroll'),chips:document.getElementById('chips'),tele:document.getElementById('tele'),live:document.getElementById('cell-live'),initial:hashId,
+  items:P.map(p=>({id:p.id,name:SHORT[p.id]})),
+  onBusy:(b,quiet)=>{detail.classList.toggle('busy',b&&!quiet)},
+  onPlace:(id,quiet)=>{showDetail(id);if(quiet)return;try{history.replaceState(null,'','#'+id)}catch(e){}
+   const r=detail.getBoundingClientRect();if(r.top>innerHeight*.6)scrollBy({top:r.top-innerHeight*.38,behavior:reduce?'auto':'smooth'})}});
+ const go=()=>{if(!window.cell.touched)window.cell.select(hashId,true)};
+ if('IntersectionObserver' in window){const io=new IntersectionObserver(es=>{if(es.some(e=>e.isIntersecting)){io.disconnect();setTimeout(go,400)}},{threshold:.5});io.observe(cellEl)}else go();
+ if(hashId!=='rover'||location.hash)document.getElementById('projects').scrollIntoView()});
 const tb=document.getElementById('theme'),root=document.documentElement;
 function paint(){tb.textContent=root.dataset.theme==='dark'?'Light':'Dark'}paint();
 tb.onclick=()=>{const n=root.dataset.theme==='dark'?'light':'dark';root.dataset.theme=n;paint();try{localStorage.setItem('theme',n)}catch(e){}};
