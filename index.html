@@ -172,40 +172,116 @@ dialog.viewer::backdrop{background:rgba(0,0,0,.62)}
 .detail{transition:opacity .25s}
 .detail.busy{opacity:.4}
 @media(max-width:520px){.tele{display:none}.cell-bar{padding-bottom:14px}}
-@media(max-width:900px){.hero .wrap,.grid,.skills{grid-template-columns:1fr}.loop{grid-template-columns:1fr 1fr}.proj.feat{flex-direction:column}.proj.feat .vis{border-right:0;border-bottom:1px solid var(--line)}nav li:nth-child(-n+4){display:none}.contact .box{padding:32px}}
+@media(max-width:900px){.hero .wrap,.grid,.skills{grid-template-columns:1fr}.loop{grid-template-columns:1fr 1fr}.proj.feat{flex-direction:column}.proj.feat .vis{border-right:0;border-bottom:1px solid var(--line)}nav li:nth-child(-n+5){display:none}.contact .box{padding:32px}}
 @media(max-width:520px){.loop{grid-template-columns:1fr}}
-@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
+/* ---- game-select front page ---- */
+html{scroll-behavior:auto}
+.stage{position:relative}
+.cell{position:relative;height:calc(100vh - 64px);height:calc(100svh - 64px);min-height:560px;max-height:1040px;background:var(--soft);overflow:hidden;border:0;border-radius:0;margin:0}
+.cell-mount{position:absolute;inset:0}
+.cell-mount:not(.r3){display:grid;place-items:center}
+.cell-mount:not(.r3) svg{width:min(1100px,92vw);min-width:0}
+.r3{line-height:0}
+.rc3-canvas{position:absolute;inset:0;width:100%;height:100%;aspect-ratio:auto;display:block;touch-action:pan-y;user-select:none;-webkit-user-select:none}
+.hud{position:absolute;z-index:2;pointer-events:none}
+.hud>*{pointer-events:auto}
+.hud-title{left:max(24px,calc((100vw - 1100px)/2));top:clamp(18px,5vh,52px);width:min(480px,calc(100vw - 48px))}
+.hud-title h1{font-size:clamp(28px,4.2vw,52px)}
+.hud-title .eyebrow{margin-bottom:12px}
+.hud-title .lede{font-size:16.5px;margin:14px 0 16px;max-width:40ch}
+.hud-title .acts{align-items:center}
+.linkbtn{background:none;border:0;color:var(--mute);font:500 14px Inter,sans-serif;text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:6px 4px}
+.linkbtn:hover{color:var(--ink)}
+.hud-info{margin-top:18px;border:1px solid var(--line);background:color-mix(in srgb,var(--card) 90%,transparent);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-radius:14px;padding:14px 16px;max-width:380px;animation:pop .22s ease both}
+.hud-info[hidden]{display:none}
+.hud-info .mono{color:var(--mute);letter-spacing:.06em;text-transform:uppercase;font-size:11.5px}
+.hud-info h3{font-size:19px;margin:4px 0 6px}
+.hud-info p{color:var(--mute);font-size:14.5px;line-height:1.5}
+.hud-info .go{margin-top:8px;color:var(--ink);font-weight:500;font-size:13.5px}
+.hud-menu{left:0;right:0;bottom:clamp(12px,3vh,28px);display:flex;flex-direction:column;align-items:center;gap:12px;padding:0 16px}
+.hud-prompt{display:flex;align-items:center;gap:10px;font-weight:500;font-size:14px;color:var(--ink);background:color-mix(in srgb,var(--card) 86%,transparent);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid var(--line);border-radius:99px;padding:6px 14px}
+.pulse{width:8px;height:8px;border-radius:50%;background:var(--ink);animation:pulse 1.6s ease-in-out infinite}
+.prog{color:var(--mute);font-size:12px;margin-left:4px}
+.hud-menu .chips{justify-content:center;max-width:min(1100px,100%)}
+.hud-menu .chip{padding:9px 14px;background:color-mix(in srgb,var(--card) 88%,transparent);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);transition:transform .15s,border-color .15s,background .15s}
+.hud-menu .chip:hover{transform:translateY(-2px)}
+.chip .ck{width:0;overflow:hidden;display:inline-block;transition:width .2s}
+.chip.done .ck{width:14px}
+.chip.done .ck:after{content:"\2713";font-size:12px}
+.hud-tele{right:max(24px,calc((100vw - 1100px)/2));top:84px;margin:0;padding:0;display:flex;gap:8px;align-items:center;font-size:11.5px;color:var(--mute)}
+.hud-tele .tv{white-space:pre}
+.rc3-lbl.done:after{content:" \2713"}
+#detail-section{padding:48px 0 8px}
+.file-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px}
+.file-tag{color:var(--mute);letter-spacing:.09em;text-transform:uppercase;font-size:12px}
+.reveal-in{animation:rise .75s cubic-bezier(.2,.7,.2,1) both}
+.next-up{margin-top:20px;border:1px dashed var(--mute);border-radius:14px;padding:18px 22px;display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.next-up div{display:flex;flex-direction:column;gap:2px;max-width:60ch}
+.next-up .mono{color:var(--mute);letter-spacing:.08em;font-size:11.5px}
+.next-up b{font:600 18px "Source Serif 4",Georgia,serif}
+.next-up span{color:var(--mute);font-size:14.5px}
+.fab{position:fixed;left:50%;bottom:18px;z-index:20;transform:translate(-50%,16px);opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;box-shadow:0 6px 24px rgba(0,0,0,.18)}
+.fab.on{opacity:1;transform:translate(-50%,0);pointer-events:auto}
+.toast{position:fixed;left:50%;top:78px;z-index:30;transform:translate(-50%,-12px);opacity:0;pointer-events:none;background:var(--ink);color:var(--onink);padding:10px 18px;border-radius:99px;font-weight:500;font-size:14px;transition:opacity .3s,transform .3s}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+@keyframes rise{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:none}}
+@keyframes pop{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.7)}}
+@media(max-width:1000px){.hud-tele{display:none}}
+@media(max-width:700px){
+.hud-title .lede{display:none}
+.hud-title h1{font-size:27px}
+.hud-menu .chips{flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;width:100%;padding:2px 2px 6px;scrollbar-width:none}
+.hud-menu .chips::-webkit-scrollbar{display:none}
+.hud-menu .chip{flex:0 0 auto}
+.hud-prompt{font-size:13px}
+.hud-info{display:none}
+.cell{min-height:520px}
+}
+
 </style>
 </head>
 <body>
 <svg aria-hidden="true" style="position:absolute;width:0;height:0"><defs><marker id="ar" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="M0 0L7 3.5L0 7z" fill="currentColor"/></marker></defs></svg>
 <nav aria-label="Primary"><div class="wrap"><b>Jason Lee</b>
-<ul><li><a href="#projects">Projects</a></li><li><a href="#approach">Approach</a></li><li><a href="#skills">Skills</a></li><li><a href="#contact">Contact</a></li>
+<ul><li><a href="#top">Projects</a></li><li><a href="#about">About</a></li><li><a href="#approach">Approach</a></li><li><a href="#skills">Skills</a></li><li><a href="#contact">Contact</a></li>
 <li><a class="btn" href="resume.pdf">Resume</a></li><li><button class="btn" id="theme" aria-label="Switch color theme">Dark</button></li></ul></div></nav>
 
-<header class="hero"><div class="wrap">
-<div>
+<header class="stage" id="top">
+<div class="cell" id="cell" data-state="idle">
+<div id="cell-svg" class="cell-mount"></div>
+<div class="hud hud-title">
 <p class="eyebrow">Mechanical Engineering, University of Toronto</p>
 <h1>Building towards a career in mechatronics and robotics.</h1>
-<p class="lede">I design the mechanical parts, wire the electronics, and write the firmware that makes a machine sense and move. Right now that means a rover and an adaptive robotic hand of my own, a camera mount for a space-exploration robotics team, and a competition rover with the University of Toronto Robotics Association.</p>
-<div class="acts"><a class="btn solid" href="#projects">See my projects</a><a class="btn" href="mailto:jjason.lee@mail.utoronto.ca">Email me</a><a class="btn" href="https://github.com/jibrailjasonlee" target="_blank" rel="noopener">GitHub</a></div>
+<p class="lede">I design the parts, wire the electronics, and write the firmware that makes a machine sense and move. Pick a part below and the arm will bring it over.</p>
+<div class="acts"><a class="btn sm solid" href="resume.pdf">Resume</a><a class="btn sm" href="mailto:jjason.lee@mail.utoronto.ca">Email</a><a class="btn sm" href="https://github.com/jibrailjasonlee" target="_blank" rel="noopener">GitHub</a><button class="linkbtn" type="button" id="v-all">Prefer a list?</button></div>
+<div class="hud-info" id="hud-info" hidden></div>
 </div>
-<div class="panel">
-<dl class="facts"><dt>Seeking</dt><dd>Robotics and mechatronics internships</dd><dt>Strengths</dt><dd>CAD, 3D printing, ESP32 firmware, PID control</dd><dt>Learning</dt><dd>ROS 2, Simulink, FEA</dd><dt>Building now</dt><dd>Rover-1, Myo-hand, RSX camera mount, UTRA rover</dd></dl>
+<div class="hud hud-menu">
+<p class="hud-prompt"><span class="pulse" aria-hidden="true"></span>Select a project to inspect<span class="prog mono" id="prog">0 / 7 inspected</span></p>
+<div class="chips" id="chips" role="group" aria-label="Choose a project for the arm to pick"></div>
 </div>
-</div></header>
+<p class="hud hud-tele tele mono" id="tele" aria-hidden="true"><span class="led"></span><span class="tv"></span></p>
+<p class="sr" id="cell-live" aria-live="polite"></p>
+</div>
+</header>
 
 <main>
-<section id="projects" style="padding-top:24px"><div class="wrap">
-<div class="head row"><div><h2>Pick a project</h2><p class="sub">A small robot workcell I built for this page, with a 6-axis arm driven by inverse kinematics. Hover to guide the arm, drag to look around, then click a part (or choose one below) and it fetches the project to the inspection stage.</p></div>
-<div class="seg-group" role="group" aria-label="Project view"><button class="seg" type="button" id="v-cell" aria-pressed="true">Robot cell</button><button class="seg" type="button" id="v-all" aria-pressed="false">All projects</button></div></div>
-<div id="cell-view">
-<div class="cell" id="cell" data-state="idle"><div class="cell-scroll" id="cell-scroll"><div id="cell-svg"></div></div>
-<div class="cell-bar"><span class="lab">Pick a part</span><div class="chips" id="chips" role="group" aria-label="Choose a project for the arm to pick"></div></div>
-<p class="tele mono" id="tele" aria-hidden="true"><span class="led"></span><span class="tv"></span></p><p class="sr" id="cell-live" aria-live="polite"></p></div>
+<section id="detail-section" hidden><div class="wrap">
+<div class="file-head"><span class="file-tag mono" id="file-tag"></span><button class="btn sm" type="button" id="back-top">&#8593; Pick another part</button></div>
 <div class="detail" id="detail"></div>
-</div>
-<div id="grid-view" hidden><div class="grid" id="grid"></div></div>
+<div class="next-up" id="next-up"></div>
+</div></section>
+
+<section id="list-section" hidden><div class="wrap">
+<div class="file-head"><h2>All projects</h2><button class="btn sm" type="button" id="back-arm">&#8593; Back to the arm</button></div>
+<div class="grid" id="grid"></div>
+</div></section>
+
+<section id="about" style="padding-top:56px;padding-bottom:24px"><div class="wrap">
+<div class="head"><h2>At a glance</h2><p class="sub">The short version, before the details.</p></div>
+<div class="panel"><dl class="facts"><dt>Seeking</dt><dd>Robotics and mechatronics internships</dd><dt>Strengths</dt><dd>CAD, 3D printing, ESP32 firmware, PID control</dd><dt>Learning</dt><dd>ROS 2, Simulink, FEA</dd><dt>Building now</dt><dd>Rover-1, Myo-hand, RSX camera mount, UTRA rover</dd></dl></div>
 </div></section>
 
 <section id="approach" style="padding-top:24px"><div class="wrap">
@@ -234,6 +310,8 @@ dialog.viewer::backdrop{background:rgba(0,0,0,.62)}
 </div></div></section>
 </main>
 <footer><div class="wrap">&copy; <span id="y"></span> Jason Lee</div></footer>
+<button class="btn fab" type="button" id="fab" aria-label="Back to the part menu">&#8593; Pick another part</button>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script src="assets/model-viewer.js" defer></script>
 <script src="assets/robot-cell.js" defer></script>
@@ -317,27 +395,43 @@ function bindCard(el){const x=P.find(p=>p.id===el.dataset.id);
  el.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{el.querySelectorAll('.tab').forEach(b=>b.setAttribute('aria-selected',b===t));el.querySelector('[data-art]').innerHTML=ART[x.id][t.dataset.i]});
  const vb=el.querySelector('[data-view]');if(vb)vb.onclick=()=>openViewer(x.id,vb);
  const z=el.querySelector('[data-art].zoom');if(z)z.onclick=()=>openViewer(x.id,vb)}
-const detail=document.getElementById('detail'),SHORT={rover:'Rover-1',myo:'Myo-hand',rsx:'RSX mount',igvc:'UTRA rover',cvt:'CVT model',tower:'Hydroponics',piston:'Piston'};
-let shown=null,gridDone=false;
-function showDetail(id){if(shown===id)return;shown=id;detail.innerHTML=cardHTML(P.find(p=>p.id===id),true);bindCard(detail.firstElementChild)}
-function setView(all){document.getElementById('cell-view').hidden=all;document.getElementById('grid-view').hidden=!all;
- document.getElementById('v-cell').setAttribute('aria-pressed',!all);document.getElementById('v-all').setAttribute('aria-pressed',all);
- if(all&&!gridDone){gridDone=true;const g=document.getElementById('grid');g.innerHTML=P.map(x=>cardHTML(x)).join('');g.querySelectorAll('.proj').forEach(bindCard)}}
-document.getElementById('v-cell').onclick=()=>setView(false);document.getElementById('v-all').onclick=()=>setView(true);
-const hashId=P.some(p=>'#'+p.id===location.hash)?location.hash.slice(1):'rover';
-showDetail(hashId);
+const $=id=>document.getElementById(id);
+const SHORT={rover:'Rover-1',myo:'Myo-hand',rsx:'RSX mount',igvc:'UTRA rover',cvt:'CVT model',tower:'Hydroponics',piston:'Piston'};
+const HOOKS={rover:'A robot I am designing end to end: chassis, electronics and firmware.',myo:'A low-cost robotic hand, designed around the objects it has to hold.',rsx:'Giving a space-robotics arm a second pair of eyes.',igvc:'The drivetrain of a rover built for an autonomous-vehicle competition.',cvt:'A transmission you can watch work, built to teach.',tower:'Zero leaks, and a spot on the showcase stage.',piston:'From raw stock to a moving part, cut on a lathe and a mill.'};
+const detail=$('detail'),dSec=$('detail-section'),lSec=$('list-section'),seen=new Set();let shown=null,gridDone=false,started=false;
+const statusOf=x=>x.st||(x.wip?'In progress':'Completed');
+function scrollToY(y,ms=900){y=Math.max(0,y);if(reduce){scrollTo({top:y,behavior:'instant'});return}
+ const y0=scrollY,d=y-y0,t0=performance.now();const step=t=>{const u=Math.min(1,(t-t0)/ms),e=u<.5?4*u*u*u:1-Math.pow(-2*u+2,3)/2;scrollTo({top:y0+d*e,behavior:'instant'});if(u<1)requestAnimationFrame(step)};requestAnimationFrame(step)}
+function renderNext(id){const i=P.findIndex(p=>p.id===id),nx=P.map((_,k)=>P[(i+1+k)%P.length]).find(p=>!seen.has(p.id));
+ $('next-up').innerHTML=nx?`<div><span class="mono">UP NEXT</span><b>${nx.t}</b><span>${HOOKS[nx.id]}</span></div><button class="btn solid" type="button" data-pick="${nx.id}">Inspect ${SHORT[nx.id]} &#8593;</button>`
+ :`<div><span class="mono">ACHIEVEMENT UNLOCKED</span><b>Full inspection complete</b><span>That is everything I am working on right now. If it looks like a fit, let us talk.</span></div><div class="acts"><a class="btn solid" href="#contact">Get in touch</a><button class="btn" type="button" data-pick="rover">Start over</button></div>`}
+function showDetail(id){const x=P.find(p=>p.id===id),i=P.indexOf(x);shown=id;
+ detail.innerHTML=cardHTML(x,true);bindCard(detail.firstElementChild);
+ detail.classList.remove('reveal-in');void detail.offsetWidth;detail.classList.add('reveal-in');
+ $('file-tag').textContent='File '+String(i+1).padStart(2,'0')+' / '+String(P.length).padStart(2,'0')+' · '+SHORT[id];renderNext(id)}
+function goPick(id){scrollToY(0,800);setTimeout(()=>window.cell&&window.cell.select(id),reduce?0:350)}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-pick]');if(b)goPick(b.dataset.pick)});
+$('back-top').onclick=$('fab').onclick=()=>scrollToY(0,800);
+function setList(on){lSec.hidden=!on;if(on&&!gridDone){gridDone=true;const g=$('grid');g.innerHTML=P.map(x=>cardHTML(x)).join('');g.querySelectorAll('.proj').forEach(bindCard)}
+ if(on)setTimeout(()=>scrollToY(lSec.offsetTop-76),30)}
+$('v-all').onclick=()=>setList(true);$('back-arm').onclick=()=>{setList(false);scrollToY(0,800)};
+let toastT;function toast(t){const el=$('toast');el.textContent=t;el.classList.add('on');clearTimeout(toastT);toastT=setTimeout(()=>el.classList.remove('on'),4200)}
+function hudInfo(id){const el=$('hud-info');if(!id){el.hidden=true;return}const x=P.find(p=>p.id===id),i=P.indexOf(x);
+ el.innerHTML=`<p class="mono">Project ${String(i+1).padStart(2,'0')} · ${statusOf(x)}${seen.has(id)?' · inspected':''}</p><h3>${x.t}</h3><p>${HOOKS[id]}</p><p class="go">Click to inspect &#8594;</p>`;el.hidden=false}
+function onPlace(id,quiet){
+ const first=!seen.has(id);seen.add(id);if(window.cell.mark)window.cell.mark(id);
+ $('prog').textContent=seen.size+' / '+P.length+' inspected';
+ showDetail(id);try{history.replaceState(null,'','#'+id)}catch(e){}
+ const wasHidden=dSec.hidden;dSec.hidden=false;started=true;
+ if(first&&seen.size===P.length)setTimeout(()=>toast('Achievement unlocked: full inspection'),1400);
+ setTimeout(()=>scrollToY(dSec.offsetTop-64-16,1000),reduce?0:wasHidden?750:650)}
 addEventListener('DOMContentLoaded',()=>{
- if(!window.initRobotCell){setView(true);return}
- const cellEl=document.getElementById('cell');
- const copts={root:cellEl,mount:document.getElementById('cell-svg'),scroller:document.getElementById('cell-scroll'),chips:document.getElementById('chips'),tele:document.getElementById('tele'),live:document.getElementById('cell-live'),initial:hashId,
-  items:P.map(p=>({id:p.id,name:SHORT[p.id]})),
-  onBusy:(b,quiet)=>{detail.classList.toggle('busy',b&&!quiet)},
-  onPlace:(id,quiet)=>{showDetail(id);if(quiet)return;try{history.replaceState(null,'','#'+id)}catch(e){}
-   const r=detail.getBoundingClientRect();if(r.top>innerHeight*.6)scrollBy({top:r.top-innerHeight*.38,behavior:reduce?'auto':'smooth'})}};
+ if(!window.initRobotCell&&!window.initRobotCell3D){setList(true);return}
+ const copts={root:$('cell'),mount:$('cell-svg'),chips:$('chips'),tele:$('tele'),live:$('cell-live'),
+  items:P.map(p=>({id:p.id,name:SHORT[p.id]})),onPlace,onHover:hudInfo};
  window.cell=(window.initRobotCell3D&&initRobotCell3D(copts))||initRobotCell(copts);
- const go=()=>{if(!window.cell.touched)window.cell.select(hashId,true)};
- if('IntersectionObserver' in window){const io=new IntersectionObserver(es=>{if(es.some(e=>e.isIntersecting)){io.disconnect();setTimeout(go,400)}},{threshold:.5});io.observe(cellEl)}else go();
- if(hashId!=='rover'||location.hash)document.getElementById('projects').scrollIntoView()});
+ if('IntersectionObserver' in window)new IntersectionObserver(es=>{$('fab').classList.toggle('on',started&&!es[0].isIntersecting&&innerHeight<scrollY+innerHeight)},{threshold:.05}).observe($('cell'));
+ const hid=location.hash.slice(1);if(P.some(p=>p.id===hid))setTimeout(()=>window.cell.select(hid),reduce?0:2600)});
 const tb=document.getElementById('theme'),root=document.documentElement;
 function paint(){tb.textContent=root.dataset.theme==='dark'?'Light':'Dark'}paint();
 tb.onclick=()=>{const n=root.dataset.theme==='dark'?'light':'dark';root.dataset.theme=n;paint();try{localStorage.setItem('theme',n)}catch(e){}};

@@ -184,6 +184,21 @@
   };
   var HANDLE = [lB(0, 0.185, HANDLE_Z, 0.1, 0.37, 0.1, 'dark'), lB(0, 0.44, HANDLE_Z, 0.5, 0.14, 0.22, 'dark')];
 
+
+  // ---- motion helpers ----------------------------------------------------------------------------
+  var VM = { psi: 3.4, rho: 6, y: 5.6 };                    // peak joint speeds for blended moves
+  var AX = ['psi', 'rho', 'y', 'g'];
+  var ST = { psi: 0.36, rho: 0.3, y: 0.28, g: 0.12 };       // smooth times for the hover spring
+  function prof(t, a, b) { var u = clamp((t - a) / (b - a), 0, 1); return u * u * u * (u * (u * 6 - 15) + 10); } // minimum-jerk
+  function damp(c, t, v, st, dt) { // critically damped spring (velocity continuous)
+    var om = 2 / st, x = om * dt, e = 1 / (1 + x + 0.48 * x * x + 0.235 * x * x * x), ch = c - t, tmp = (v + om * ch) * dt;
+    v = (v - om * tmp) * e; var out = t + (ch + tmp) * e;
+    if ((t - c > 0) === (out > t)) { out = t; v = 0; }
+    return [out, v];
+  }
+  var ease = function (u) { u = clamp(u, 0, 1); return u * u * (3 - 2 * u); };
+  var easeOutBack = function (u) { u = clamp(u, 0, 1); var c = 1.5; return 1 + (c + 1) * Math.pow(u - 1, 3) + c * Math.pow(u - 1, 2); };
+
   window.initRobotCell3D = function (o) {
     // --- WebGL context (bail out before touching the DOM if unavailable) ----------------------
     var canvas = document.createElement('canvas');
@@ -211,13 +226,15 @@
     o.mount.classList.add('r3');
     canvas.className = 'rc3-canvas';
     canvas.setAttribute('role', 'img');
-    canvas.setAttribute('aria-label', 'Interactive 3D robot arm workcell. Use the buttons below to choose a project. Drag to look around.');
+    canvas.setAttribute('aria-label', 'Interactive 3D robot arm workcell. Use the part menu to choose a project. Drag to look around.');
     var labels = document.createElement('div'); labels.className = 'rc3-labels'; labels.setAttribute('aria-hidden', 'true');
     o.mount.appendChild(canvas); o.mount.appendChild(labels);
 
+    var anim = !reduce;
     var items = o.items.map(function (it, i) {
       var phi = PHIS[i] * A;
-      return { id: it.id, name: it.name, i: i, hx: RING * sin(phi), hz: RING * cos(phi), x: RING * sin(phi), y: 0, z: RING * cos(phi), model: MODELS[it.id]() };
+      return { id: it.id, name: it.name, i: i, hx: RING * sin(phi), hz: RING * cos(phi), x: RING * sin(phi), y: 0, z: RING * cos(phi), model: MODELS[it.id](),
+        spin: i * 1.3, ba: 0.03, hl: 0, fix: false, done: false };
     });
     var byId = {}; items.forEach(function (it) { byId[it.id] = it; });
     items.forEach(function (it) {
@@ -226,17 +243,18 @@
     var stageLbl = document.createElement('span'); stageLbl.className = 'rc3-lbl rc3-stage'; stageLbl.textContent = 'Inspection stage'; labels.appendChild(stageLbl);
 
     o.chips.innerHTML = items.map(function (it) {
-      return '<button type="button" class="chip" data-id="' + it.id + '" aria-pressed="false"><span class="mono">' + ('0' + (it.i + 1)) + '</span>' + it.name + '</button>';
+      return '<button type="button" class="chip" data-id="' + it.id + '" aria-pressed="false"><span class="mono">' + ('0' + (it.i + 1)) + '</span><span class="cn">' + it.name + '</span><span class="ck" aria-hidden="true"></span></button>';
     }).join('');
 
     // --- state --------------------------------------------------------------------------------
     var pal = readPalette();
-    var cur = { psi: HOME.psi, rho: HOME.rho, y: HOME.y, g: 0.5 }, tgt = { psi: HOME.psi, rho: HOME.rho, y: HOME.y, g: 0.5 };
-    var held = null, onStage = null, want = null, busy = false, quiet = false, touched = false, hotId = null;
-    var state = 'IDLE', waiters = [], raf = 0, last = 0, teleT = 0, dirty = true, joints = {}, moving = false;
-    var cam = { yaw: 0, pitch: 24 * A, dist: 14, sway: !reduce, t0: performance.now() };
-    var size = { w: 1, h: 1, dpr: 1 };
-    var tip = { x: 0, y: 0, z: 0 }, view = { eye: [0, 5, 10], f: [0, 0, -1], r: [1, 0, 0], u: [0, 1, 0], tv: 0.2867, th: 0.5, VP: I() };
+    var cur = anim ? { psi: -PI / 2, rho: 1.7, y: 4.5, g: 1 } : { psi: HOME.psi, rho: HOME.rho, y: HOME.y, g: 0.5 };
+    var tgt = { psi: HOME.psi, rho: HOME.rho, y: HOME.y, g: 0.5 }, vel = { psi: 0, rho: 0, y: 0, g: 0 }, mvn = null;
+    var held = null, onStage = null, want = null, need = false, busy = false, pumping = false, parkReq = false, quiet = false, touched = false, hotId = null, toStage = false;
+    var state = 'IDLE', raf = 0, last = 0, teleT = 0, dirty = true, joints = {}, visible = true, introT0 = performance.now();
+    var cam = { yaw: 0, pitch: 22 * A, sway: anim }, focus = 0, focusV = 0, camX = 0, camXV = 0, simT = 0;
+    var size = { w: 1, h: 1, cssW: 1, cssH: 1, dpr: 1 };
+    var tip = { x: 0, y: 0, z: 0 }, view = { eye: [0, 5, 10], f: [0, 0, -1], r: [1, 0, 0], u: [0, 1, 0], tv: 0.2867, th: 0.5, m8: 0, m9: 0, VP: I() };
     var LIGHT = norm([-0.5, 1.0, 0.45]), FOV = 32 * A, TARGET = [0, 1.3, 0.8];
 
     // --- kinematics ----------------------------------------------------------------------------
@@ -249,6 +267,11 @@
       return { j1: psi, j2: q2, j3: q3, j4: 0, j5: PI - q2 - q3, j6: psi };
     }
     var pol = function (P) { return { psi: Math.atan2(-P.z, P.x), rho: Math.hypot(P.x, P.z), y: P.y }; };
+    function fkTip() {
+      var q = joints;
+      var M = chain(RY(q.j1), T(0, H1, 0), RZ(-q.j2), T(0, L2, 0), RZ(-q.j3), T(0, L3, 0), RY(q.j4), T(0, J4L, 0), RZ(-q.j5), T(0, LT, 0), RY(q.j6));
+      return { x: M[12], y: M[13], z: M[14], M: M };
+    }
 
     // --- drawing list ---------------------------------------------------------------------------
     var list = [];
@@ -258,32 +281,33 @@
     var cylY = function (F, y0, r, h, c, spec) { add('cyl', chain(F, T(0, y0, 0), Sc(r, h, r)), c, spec == null ? 0.25 : spec, 30); };
     var cylZ = function (F, r, len, c) { add('cyl', chain(F, RX(PI / 2), Sc(r, len, r), T(0, -0.5, 0)), c, 0.4, 40); };
 
-    function itemMatrix(it) { return T(it.x, it.y, it.z); }
+    var introU = function () { return anim ? clamp((performance.now() - introT0) / 2600, 0, 1) : 1; };
+    function appear(it) { return anim ? clamp((performance.now() - introT0 - 250 - it.i * 110) / 800, 0, 1) : 1; }
+    function itemOffset(it) {
+      if (it === held) return 0;
+      return it.ba * sin(simT * 1.5 + it.i * 0.9) + it.hl + (1 - easeOutBack(appear(it))) * 3.2;
+    }
     function buildScene() {
       list.length = 0;
-      // table, base mount
       add('box', mul(T(0, -0.15, 0.9), Sc(11.6, 0.3, 8.8)), 'slab', 0.05, 8, true);
       add('box', mul(T(0, 0.0015, 0.9), Sc(11.6, 0.003, 8.8)), 'table', 0.02, 6, true); list[1].mode = -1;
-      // stage pedestal + camera post
       add('cyl', chain(T(STAGE.x, 0, STAGE.z), Sc(1.05, STAGE.h, 1.05)), 'pedestal', 0.2, 24);
       add('cyl', chain(T(STAGE.x, STAGE.h, STAGE.z), Sc(1.0, 0.04, 1.0)), 'cap', 0.3, 30);
       var head = [STAGE.x + 0.9, 2.5, STAGE.z - 1.5];
       add('cyl', chain(T(head[0], 0, head[2]), Sc(0.09, 2.4, 0.09)), 'mid', 0.2, 20);
       add('box', chain(T(head[0], 2.5, head[2]), RY(-0.5), Sc(0.5, 0.3, 0.4)), 'dark', 0.3, 30);
-      // base
       add('cyl', chain(T(0, 0, 0), Sc(1.15, 0.1, 1.15)), 'mid', 0.3, 30);
       add('cyl', chain(T(0, 0.1, 0), Sc(0.95, 0.3, 0.95)), 'cap', 0.45, 40);
-      // items
       items.forEach(function (it) {
-        var M = itemMatrix(it);
+        it.vis = appear(it) > 0 || it === held;
+        if (!it.vis) return;
+        var M = T(it.x, it.y + itemOffset(it), it.z);
         add('box', chain(M, T(0, TH / 2, 0), Sc(TOTE, TH, TOTE)), 'tote', 0.08, 16);
         add('box', chain(M, T(0, TH + 0.004, 0), Sc(TOTE - 0.16, 0.008, TOTE - 0.16)), 'tote2', 0.05, 10);
-        addParts(it.model, mul(M, T(0, TH, 0)));
+        addParts(it.model, chain(M, T(0, TH, 0), RY(it.spin)));
         addParts(HANDLE, mul(M, T(0, TH, 0)));
       });
-      // arm
-      var q = joints, B = T(0, 0, 0);
-      var Aa = chain(B, RY(q.j1));
+      var q = joints, Aa = RY(q.j1);
       cylY(Aa, 0.4, 0.72, 0.5, 'body');
       cylY(Aa, 0.38, 0.76, 0.06, 'cap', 0.5);
       var S2 = chain(Aa, T(0, H1, 0));
@@ -302,7 +326,7 @@
       cylY(Wp, 0, 0.17, 0.38, 'body');
       var Wt = chain(Wp, T(0, 0.38, 0), RY(q.j6));
       cylY(Wt, 0, 0.23, 0.1, 'cap', 0.5);
-      add('cyl', chain(Wt, T(0, 0.095, 0), Sc(0.235, 0.025, 0.235)), state === 'IDLE' ? 'ok' : 'wip', 0, 1, true); list[list.length - 1].mode = 5;
+      add('cyl', chain(Wt, T(0, 0.095, 0), Sc(0.235, 0.025, 0.235)), mvn ? 'wip' : 'ok', 0, 1, true); list[list.length - 1].mode = 5;
       add('box', chain(Wt, T(0, 0.27, 0), Sc(0.62, 0.34, 0.34)), 'body', 0.3, 30);
       add('box', chain(Wt, T(0, 0.5, 0), Sc(0.9, 0.1, 0.3)), 'dark', 0.3, 30);
       var gap = 0.25 + 0.17 * cur.g;
@@ -313,23 +337,23 @@
       });
     }
 
-    function fkTip() {
-      var q = joints;
-      var M = chain(RY(q.j1), T(0, H1, 0), RZ(-q.j2), T(0, L2, 0), RZ(-q.j3), T(0, L3, 0), RY(q.j4), T(0, J4L, 0), RZ(-q.j5), T(0, LT, 0), RY(q.j6));
-      return { x: M[12], y: M[13], z: M[14], M: M };
-    }
-
     // --- rendering ------------------------------------------------------------------------------
     function setCam() {
-      var yaw = cam.yaw + (cam.sway ? 0.075 * sin((performance.now() - cam.t0) / 1000 * 0.45) * Math.exp(-(performance.now() - cam.t0) / 14000) : 0);
-      var a = size.w / size.h, tv = Math.tan(FOV / 2), th = tv * a;
-      var D = Math.max(13.2, 6.0 / th);
-      cam.dist = D;
-      var cp = cos(cam.pitch), e = [TARGET[0] + D * sin(yaw) * cp, TARGET[1] + D * sin(cam.pitch), TARGET[2] + D * cos(yaw) * cp];
-      var f = norm(sub(TARGET, e)), r = norm(cross(f, [0, 1, 0])), u = cross(r, f);
-      view = { eye: e, f: f, r: r, u: u, tv: tv, th: th, VP: mul(persp(FOV, a, 0.5, 80), lookAt(e, TARGET, [0, 1, 0])) };
+      var now = performance.now(), a = size.w / size.h, tv = Math.tan(FOV / 2), th = tv * a;
+      var iu = introU(), ie = 1 - ease(iu);
+      var sway = cam.sway && anim ? 0.07 * sin(simT * 0.42) * Math.exp(-simT / 18) : 0;
+      var yaw = cam.yaw + sway + 0.11 * focus + 0.35 * ie * 0.4;
+      var pitch = cam.pitch + 0.16 * ie - 0.03 * focus;
+      var Db = a < 1.05 ? 23 : Math.max(14.4, 6.2 / th) * (a > 1.4 ? 1.16 : 1);
+      var D = Db * (1 - 0.09 * focus) * (1 + 0.32 * ie);
+      var tg = [TARGET[0] + camX + 0.9 * focus, TARGET[1] + 0.25 * focus, TARGET[2] - 0.8 * focus];
+      var m8 = a > 1.4 ? -0.36 : 0, m9 = a > 1.4 ? -0.2 : a < 1.05 ? -0.06 : 0.1;
+      var cp = cos(pitch), e = [tg[0] + D * sin(yaw) * cp, tg[1] + D * sin(pitch), tg[2] + D * cos(yaw) * cp];
+      var f = norm(sub(tg, e)), r = norm(cross(f, [0, 1, 0])), u = cross(r, f);
+      var P = persp(FOV, a, 0.5, 80); P[8] = m8; P[9] = m9;
+      view = { eye: e, f: f, r: r, u: u, tv: tv, th: th, m8: m8, m9: m9, VP: mul(P, lookAt(e, tg, [0, 1, 0])) };
     }
-    function drawItem(d, mode, alpha, c2) {
+    function drawItem(d) {
       gl.uniformMatrix4fv(U.uM, false, d.M);
       gl.uniformMatrix3fv(U.uNM, false, normalMat(d.M));
       var P = G[d.p];
@@ -349,28 +373,26 @@
         gl.uniform1f(U.uMode, d.mode || 0); gl.uniform3fv(U.uCol, d.c); gl.uniform3fv(U.uCol2, pal.grid); gl.uniform1f(U.uSpec, d.s); gl.uniform1f(U.uShin, d.sh); gl.uniform1f(U.uA, 1);
         drawItem(d);
       }
-      // contact blobs and hover/selection rings
       gl.enable(gl.BLEND); gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA); gl.depthMask(false);
       gl.uniform3fv(U.uCol, pal.shadow);
       gl.uniform1f(U.uMode, 2);
       var blob = function (x, z, s, a, y0) { gl.uniform1f(U.uA, a); drawItem({ p: 'quad', M: chain(T(x, y0 || 0.006, z), Sc(s, 1, s)) }); };
       blob(0, 0, 1.9, 0.35); blob(STAGE.x, STAGE.z, 1.7, 0.3);
-      items.forEach(function (it) { if (it.y < 0.01 && it !== held) blob(it.x, it.z, 1.15, pal.dim ? 0.55 : 0.3); });
-      // planar shadows, drawn once per pixel through the stencil
+      items.forEach(function (it) { if (it.vis && it.y < 0.01 && it !== held) blob(it.x, it.z, 1.15 + it.hl * 0.6, (pal.dim ? 0.55 : 0.3) * (1 - it.hl)); });
       gl.enable(gl.STENCIL_TEST); gl.stencilFunc(gl.EQUAL, 0, 255); gl.stencilOp(gl.KEEP, gl.KEEP, gl.INCR);
       gl.uniform1f(U.uMode, 1); gl.uniform1f(U.uA, pal.dim ? 0.5 : 0.22); gl.uniform3fv(U.uCol, pal.shadow);
       var SM = new Float32Array([1, 0, 0, 0, -LIGHT[0] / LIGHT[1], 0, -LIGHT[2] / LIGHT[1], 0, 0, 0, 1, 0, 0, 0.012, 0, 1]);
       for (i = 2; i < list.length; i++) { d = list[i]; if (d.ns || d.mode) continue; drawItem({ p: d.p, M: mul(SM, d.M) }); }
       gl.disable(gl.STENCIL_TEST);
-      // rings
       gl.uniform1f(U.uMode, 3);
-      var ringCol = pal.ink;
-      var ring = function (x, z, y0, a) { gl.uniform3fv(U.uCol, ringCol); gl.uniform1f(U.uA, a); drawItem({ p: 'quad', M: chain(T(x, y0, z), Sc(0.82, 1, 0.82)) }); };
+      var pulse = 0.82 + 0.05 * sin(simT * 5);
+      var ring = function (x, z, y0, a, s) { gl.uniform3fv(U.uCol, pal.ink); gl.uniform1f(U.uA, a); drawItem({ p: 'quad', M: chain(T(x, y0, z), Sc(s, 1, s)) }); };
       items.forEach(function (it) {
-        if (it.id === hotId && it !== held) ring(it.x, it.z, it.y + 0.012, 0.9);
-        else if (it.id === (want || onStage) && onStage === it.id && it !== held) ring(it.x, it.z, it.y + 0.012, 0.55);
+        if (it === held || !it.vis) return;
+        if (it.id === hotId) ring(it.x, it.z, it.y + 0.012, 0.9, pulse);
+        else if (onStage === it.id && it.id === want) ring(it.x, it.z, it.y + 0.012, 0.55, 0.82);
+        else if (it.done) ring(it.x, it.z, it.y + 0.012, 0.22, 0.7);
       });
-      // scanner beam
       gl.uniform1f(U.uMode, 4); gl.uniform3fv(U.uCol, pal.ink); gl.uniform1f(U.uA, 0.11);
       var head = [STAGE.x + 0.9, 2.45, STAGE.z - 1.5], tc = [STAGE.x, STAGE.h + 0.5, STAGE.z + 0.2];
       var len = Math.hypot(head[0] - tc[0], head[1] - tc[1], head[2] - tc[2]);
@@ -378,10 +400,10 @@
       gl.depthMask(true); gl.disable(gl.BLEND);
       placeLabels();
     }
-
     function project(p) {
       var v = sub(p, view.eye), z = dot(v, view.f);
-      return { x: (dot(v, view.r) / (z * view.th) + 1) / 2 * size.cssW, y: (1 - dot(v, view.u) / (z * view.tv)) / 2 * size.cssH, z: z };
+      var nx = dot(v, view.r) / (z * view.th) - view.m8, ny = dot(v, view.u) / (z * view.tv) - view.m9;
+      return { x: (nx + 1) / 2 * size.cssW, y: (1 - ny) / 2 * size.cssH, z: z };
     }
     function placeLabels() {
       var narrow = size.cssW < 640;
@@ -389,45 +411,58 @@
         var p = project([it.x, it.y + 0.1, it.z + TOTE / 2 + 0.28]);
         var show = !narrow || it.id === hotId || it.id === onStage;
         it.lbl.style.transform = 'translate(' + p.x.toFixed(1) + 'px,' + p.y.toFixed(1) + 'px) translate(-50%,-50%)';
-        it.lbl.style.opacity = show ? '' : '0';
-        it.lbl.classList.toggle('on', it.id === (want || onStage) && it.id === onStage);
+        it.lbl.style.opacity = show && introU() > 0.55 ? '' : '0';
+        it.lbl.classList.toggle('on', it.id === onStage && it.id === want);
       });
       var s = project([STAGE.x + 0.2, 0.02, STAGE.z - 1.3]);
       stageLbl.style.transform = 'translate(' + s.x.toFixed(1) + 'px,' + s.y.toFixed(1) + 'px) translate(-50%,-50%)';
-      stageLbl.style.opacity = narrow ? '0' : '';
+      stageLbl.style.opacity = narrow || introU() < 0.7 ? '0' : '';
     }
-
     function resize() {
       var r = canvas.getBoundingClientRect(), dpr = Math.min(window.devicePixelRatio || 1, 2);
       var w = Math.max(1, Math.round(r.width)), h = Math.max(1, Math.round(r.height));
       if (w === size.cssW && h === size.cssH && dpr === size.dpr) return;
       size = { w: w, h: h, cssW: w, cssH: h, dpr: dpr }; canvas.width = Math.round(w * dpr); canvas.height = Math.round(h * dpr);
-      size.w = w; size.h = h; dirty = true; kick();
+      dirty = true; kick();
     }
-    size.cssW = 1; size.cssH = 1;
 
-    // --- motion ----------------------------------------------------------------------------------
+    // --- the frame loop -------------------------------------------------------------------------------
     function frame(t) {
       raf = 0;
-      var dt = Math.min(0.05, (t - last) / 1000 || 0.016); last = t; moving = false;
-      ['psi', 'rho', 'y', 'g'].forEach(function (k) {
-        var e = tgt[k] - cur[k]; if (e === 0) return;
-        var v = clamp(e * (k === 'g' ? 12 : 5.5), -SPEED[k], SPEED[k]), st = v * dt, eps = k === 'g' ? 0.004 : k === 'psi' ? 0.0015 : 0.006;
-        if (Math.abs(e) <= Math.max(Math.abs(st), eps)) cur[k] = tgt[k]; else { cur[k] += st; moving = true; }
-      });
+      if (!visible) return;
+      var dt = Math.min(0.05, (t - last) / 1000 || 0.016); last = t; simT += anim ? dt : 0;
+      var moving = false, k, r, i;
+      if (mvn) {
+        var tt = (t - mvn.t0) / mvn.dur, u = Math.min(tt, 1);
+        for (i = 0; i < 4; i++) { k = AX[i]; var w = mvn.win[k]; cur[k] = mvn.from[k] + (mvn.to[k] - mvn.from[k]) * prof(u, w[0], w[1]); }
+        moving = true;
+        if (tt >= 1) { var done = mvn.resolve; for (i = 0; i < 4; i++) { k = AX[i]; cur[k] = mvn.to[k]; tgt[k] = mvn.to[k]; vel[k] = 0; } mvn = null; done(); }
+      } else {
+        for (i = 0; i < 4; i++) {
+          k = AX[i]; r = damp(cur[k], tgt[k], vel[k], ST[k], dt); cur[k] = r[0]; vel[k] = r[1];
+          if (Math.abs(tgt[k] - cur[k]) > 0.0015 || Math.abs(vel[k]) > 0.004) moving = true; else { cur[k] = tgt[k]; vel[k] = 0; }
+        }
+      }
       joints = ik(cur.psi, cur.rho, cur.y);
       var tx = cur.rho * cos(cur.psi), tz = -cur.rho * sin(cur.psi);
       tip.x = tx; tip.y = cur.y; tip.z = tz;
       if (held) { held.x = tx; held.y = cur.y - GRASP; held.z = tz - HANDLE_Z; }
-      var swaying = cam.sway && performance.now() - cam.t0 < 42000;
-      if (moving || dirty || swaying) render();
+      // idle life: bob, spin, hover lift, camera focus and follow
+      var narrow = size.w / size.h < 1.05, spinning = false;
+      items.forEach(function (it) {
+        var ba = (it.fix || it === held || onStage === it.id) ? 0 : 0.03, hl = it.id === hotId && !it.fix && it !== held ? 0.12 : 0;
+        it.ba += (ba - it.ba) * Math.min(1, dt * 7); it.hl += (hl - it.hl) * Math.min(1, dt * 9);
+        if (anim) { it.spin += dt * (it.id === hotId ? 1.3 : 0.32); spinning = true; }
+      });
+      var rf = damp(focus, toStage ? 1 : 0, focusV, 0.7, dt); focus = rf[0]; focusV = rf[1];
+      var cx = narrow ? clamp((hotId ? byId[hotId].x : tip.x) * 0.7, -2.6, 2.6) : 0;
+      var rc = damp(camX, cx, camXV, 0.8, dt); camX = rc[0]; camXV = rc[1];
       writeTele(t);
       o.root.dataset.state = moving ? 'moving' : 'idle';
-      if (!moving) { var w = waiters; waiters = []; w.forEach(function (r) { r(); }); }
-      if (moving || waiters.length || swaying) raf = requestAnimationFrame(frame);
-      else if (dirty) render();
+      render();
+      if (anim || moving || dirty || mvn || Math.abs(focusV) > 0.001) raf = requestAnimationFrame(frame);
     }
-    function kick() { if (!raf) { last = performance.now(); raf = requestAnimationFrame(frame); } }
+    function kick() { if (!raf && visible) { last = performance.now(); raf = requestAnimationFrame(frame); } }
     function writeTele(now, force) {
       if (!o.tele || (!force && now - teleT < 110)) return;
       teleT = now;
@@ -436,100 +471,124 @@
       o.tele.querySelector('.tv').textContent = (state + '         ').slice(0, 9) + ' J1' + f(q.j1) + ' J2' + f(q.j2) + ' J3' + f(q.j3) + ' J4' + f(q.j4) + ' J5' + f(q.j5) + ' J6' + f(q.j6) +
         '   GRIP ' + (cur.g > 0.75 ? 'open  ' : cur.g < 0.25 ? 'closed' : 'part  ');
     }
-    function mvPol(psi, rho, y, g) {
-      tgt.psi = psi; tgt.rho = rho; tgt.y = y; if (g !== undefined) tgt.g = g;
-      if (reduce) { cur.psi = tgt.psi; cur.rho = tgt.rho; cur.y = tgt.y; cur.g = tgt.g; syncNow(); return Promise.resolve(); }
-      return new Promise(function (r) { waiters.push(r); kick(); });
-    }
     function syncNow() {
       joints = ik(cur.psi, cur.rho, cur.y);
       var tx = cur.rho * cos(cur.psi), tz = -cur.rho * sin(cur.psi); tip.x = tx; tip.y = cur.y; tip.z = tz;
       if (held) { held.x = tx; held.y = cur.y - GRASP; held.z = tz - HANDLE_Z; }
       render(); writeTele(0, true);
     }
-    function mv(P, g) { var p = pol(P); return mvPol(p.psi, p.rho, P.y, g); }
-    async function travel(P, g) {
-      var p = pol(P), far = Math.abs(p.psi - cur.psi) * Math.max(cur.rho, 1) > 0.2 || Math.abs(p.rho - cur.rho) > 0.2;
-      if (far) {
-        if (cur.y < SAFE - 0.05) await mvPol(cur.psi, cur.rho, SAFE, g);
-        await mvPol(p.psi, p.rho, SAFE, g);
-      }
-      await mvPol(p.psi, p.rho, P.y, g);
-    }
-    async function grip(open) {
-      tgt.g = open;
-      if (reduce) { cur.g = open; syncNow(); return; }
-      await new Promise(function (r) { waiters.push(r); kick(); }); await sleep(110);
+
+    // --- choreography: blended minimum-jerk moves ----------------------------------------------------------
+    function doMove(to, opt) {
+      opt = opt || {};
+      var from = { psi: cur.psi, rho: cur.rho, y: cur.y, g: cur.g }, dest = {};
+      AX.forEach(function (k) { dest[k] = to[k] === undefined ? from[k] : to[k]; });
+      if (reduce) { AX.forEach(function (k) { cur[k] = tgt[k] = dest[k]; vel[k] = 0; }); syncNow(); return Promise.resolve(); }
+      var win = { psi: [0, 1], rho: [0, 1], y: [0, 1], g: [0, 1] };
+      if (opt.style === 'upover') { win.y = [0, 0.55]; win.psi = [0.22, 1]; win.rho = [0.22, 1]; }
+      var dur = opt.dur || Math.max(0.42, 1.875 * Math.max(Math.abs(dest.psi - from.psi) / VM.psi, Math.abs(dest.rho - from.rho) / VM.rho, Math.abs(dest.y - from.y) / (opt.vy || VM.y)));
+      if (opt.style === 'upover') dur *= 1.12;
+      return new Promise(function (resolve) {
+        mvn = { from: from, to: dest, win: win, t0: performance.now(), dur: dur * 1000, resolve: resolve };
+        AX.forEach(function (k) { vel[k] = 0; }); kick();
+      });
     }
     var gpos = function (it) { return { x: it.x, y: it.y + GRASP, z: it.z + HANDLE_Z }; };
     var slotPos = function (it) { return { x: it.hx, y: 0, z: it.hz }; };
     var stagePos = { x: STAGE.x, y: STAGE.h, z: STAGE.z };
+    var grip = function (open) { return doMove({ g: open }, { dur: 0.26 }); };
 
     async function grab(it) {
-      var P = gpos(it);
-      state = 'APPROACH'; await travel({ x: P.x, y: P.y, z: P.z }, 1);
-      state = 'PICK'; await grip(0); held = it;
-      state = 'LIFT'; await mv({ x: P.x, y: SAFE, z: P.z }, 0);
+      it.fix = true;
+      var P = gpos(it), p = pol(P);
+      state = 'APPROACH'; await doMove({ psi: p.psi, rho: p.rho, y: SAFE, g: 1 }, { style: cur.y < SAFE - 0.4 ? 'upover' : 'direct' });
+      state = 'PICK'; await doMove({ y: P.y }, { vy: 4.4 });
+      await grip(0); held = it;
+      state = 'LIFT'; await doMove({ y: SAFE }, { vy: 5.4 });
     }
-    async function put(it, pos) {
-      var P = gpos(pos);
-      state = 'CARRY'; await mv({ x: P.x, y: SAFE, z: P.z }, 0);
-      state = 'PLACE'; await mv(P, 0);
-      var h = held; held = null; h.x = pos.x; h.y = pos.y; h.z = pos.z; dirty = true;
+    async function put(it, pos, afterRelease) {
+      var P = gpos(pos), p = pol(P), dest = pos === stagePos;
+      toStage = dest;
+      state = 'CARRY'; await doMove({ psi: p.psi, rho: p.rho, y: SAFE, g: 0 });
+      state = 'PLACE'; await doMove({ y: P.y }, { vy: 4.4 });
+      var h = held; held = null; h.x = pos.x; h.y = pos.y; h.z = pos.z; h.fix = false; dirty = true;
       await grip(1);
-      state = 'RETREAT'; await mv({ x: P.x, y: SAFE, z: P.z }, 1);
+      if (afterRelease) afterRelease();
+      state = 'RETREAT'; await doMove({ y: SAFE, g: 1 }, { vy: 5.4 });
+      toStage = false;
+    }
+    async function goHome() { state = 'IDLE'; await doMove({ psi: HOME.psi, rho: HOME.rho, y: HOME.y, g: 0.5 }); }
+
+    async function returnStage() {
+      var out = byId[onStage];
+      await grab(out); await put(out, slotPos(out)); onStage = null;
+    }
+    async function fetchPart(id) {
+      var it = byId[id], home = { x: it.x, y: it.y, z: it.z };
+      await grab(it);
+      if (want !== id) { await put(it, home); return false; }
+      await put(it, stagePos, function () {
+        onStage = id; need = false;
+        o.live && (o.live.textContent = it.name + ' is on the inspection stage. Details are below.');
+        o.onPlace && o.onPlace(id, quiet);
+      });
+      return true;
+    }
+    async function pump() {
+      if (pumping) return;
+      pumping = true; busy = true; o.onBusy && o.onBusy(true, quiet);
+      try {
+        for (;;) {
+          if (onStage && (onStage !== want || (parkReq && !need))) { await returnStage(); parkReq = false; continue; }
+          if (want && need && onStage !== want) { await fetchPart(want); continue; }
+          break;
+        }
+        await goHome();
+      } finally { busy = false; pumping = false; o.onBusy && o.onBusy(false, quiet); dirty = true; kick(); }
     }
 
     function markChips() {
       var id = want || o.initial;
-      o.chips.querySelectorAll('.chip').forEach(function (b) { b.setAttribute('aria-pressed', b.dataset.id === id); });
+      o.chips.querySelectorAll('.chip').forEach(function (b) { b.setAttribute('aria-pressed', id ? b.dataset.id === id : false); });
       dirty = true; kick();
-    }
-    async function run() {
-      busy = true; o.onBusy && o.onBusy(true, quiet);
-      while (onStage !== want) {
-        var target = want;
-        if (onStage) {
-          var out = byId[onStage];
-          await grab(out); await put(out, slotPos(out)); onStage = null;
-          if (want !== target) continue;
-        }
-        var it = byId[target], home = { x: it.x, y: it.y, z: it.z };
-        await grab(it);
-        if (want !== target) { await put(it, home); continue; }
-        await put(it, stagePos); onStage = target;
-        if (want === target) {
-          o.live && (o.live.textContent = it.name + ' is on the inspection stage. Details are below.');
-          o.onPlace && o.onPlace(target, quiet);
-        }
-      }
-      state = 'IDLE'; await mvPol(HOME.psi, HOME.rho, HOME.y, 0.5);
-      busy = false; o.onBusy && o.onBusy(false, quiet); dirty = true; kick();
     }
     function select(id, q) {
       if (!byId[id]) return;
-      if (id === want && (busy || onStage === id)) return;
-      touched = touched || !q;
-      var wasQuiet = quiet; quiet = !!q; want = id; markChips();
-      if (busy) { if (wasQuiet && !quiet) o.onBusy && o.onBusy(true, false); } else run();
+      touched = touched || !q; quiet = !!q; want = id;
+      markChips();
+      if (onStage === id) { o.onPlace && o.onPlace(id, false); return; }
+      need = true; parkReq = false; pump();
+    }
+    function mark(id, v) {
+      var it = byId[id]; if (!it) return;
+      it.done = v !== false; it.lbl.classList.toggle('done', it.done);
+      var b = o.chips.querySelector('.chip[data-id="' + id + '"]'); if (b) b.classList.toggle('done', it.done);
+      dirty = true; kick();
     }
 
-    // --- hover, picking, orbit ----------------------------------------------------------------------
-    function setHot(id) { if (hotId !== id) { hotId = id; dirty = true; kick(); } }
+    // --- hover, picking, orbit ----------------------------------------------------------------------------
+    function setHot(id) {
+      if (hotId === id) return;
+      hotId = id; canvas.style.cursor = id ? 'pointer' : 'grab'; dirty = true; kick();
+      o.onHover && o.onHover(id);
+    }
+    function follow(P, g) {
+      if (mvn) return;
+      var p = pol(P); tgt.psi = p.psi; tgt.rho = p.rho; tgt.y = P.y; tgt.g = g; if (reduce) { AX.forEach(function (k) { cur[k] = tgt[k]; }); syncNow(); return; } kick();
+    }
     function trackItem(it) {
       if (busy || reduce || !it) return;
       state = 'TRACK'; setHot(it.id);
-      var P = gpos(it); var p = pol({ x: P.x, y: HOVER, z: P.z });
-      mvPol(p.psi, p.rho, HOVER + (it.y > 0.1 ? 0.5 : 0), 1);
+      var P = gpos(it); follow({ x: P.x, y: HOVER + (it.y > 0.1 ? 0.5 : 0), z: P.z }, 1);
     }
     var relTimer = 0;
     function release() {
-      clearTimeout(relTimer);
-      if (busy || reduce) { setHot(null); return; }
-      state = 'IDLE'; setHot(null); mvPol(HOME.psi, HOME.rho, HOME.y, 0.5);
+      clearTimeout(relTimer); setHot(null);
+      if (busy || reduce) return;
+      state = 'IDLE'; follow({ x: HOME.rho * cos(HOME.psi), y: HOME.y, z: -HOME.rho * sin(HOME.psi) }, 0.5);
     }
     function pickAt(cx, cy) {
-      var r = canvas.getBoundingClientRect(), nx = (cx - r.left) / r.width * 2 - 1, ny = 1 - (cy - r.top) / r.height * 2;
+      var r = canvas.getBoundingClientRect(), nx = (cx - r.left) / r.width * 2 - 1 + view.m8, ny = 1 - (cy - r.top) / r.height * 2 + view.m9;
       var d = norm([view.f[0] + nx * view.th * view.r[0] + ny * view.tv * view.u[0], view.f[1] + nx * view.th * view.r[1] + ny * view.tv * view.u[1], view.f[2] + nx * view.th * view.r[2] + ny * view.tv * view.u[2]]);
       var best = null, bt = 1e9;
       items.forEach(function (it) {
@@ -576,14 +635,23 @@
       b.addEventListener('mouseleave', release); b.addEventListener('blur', release);
     });
 
-    // --- lifecycle ---------------------------------------------------------------------------------
+    // --- lifecycle ---------------------------------------------------------------------------------------
     if (window.ResizeObserver) new ResizeObserver(resize).observe(canvas); else addEventListener('resize', resize);
     new MutationObserver(function () { pal = readPalette(); dirty = true; kick(); }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
     canvas.addEventListener('webglcontextlost', function (e) { e.preventDefault(); });
+    if (window.IntersectionObserver) {
+      new IntersectionObserver(function (es) {
+        var r = es[0].intersectionRatio; visible = es[0].isIntersecting;
+        if (visible) kick();
+        // while the viewer reads a project card, quietly put the inspected part back on the tray
+        if (r < 0.12 && onStage && !busy && !need) { parkReq = true; pump(); }
+        else if (r > 0.45) parkReq = false;
+      }, { threshold: [0, 0.12, 0.45] }).observe(o.mount);
+    }
     resize(); markChips(); syncNow(); kick();
 
     return {
-      select: select, items: items, is3d: true,
+      select: select, items: items, is3d: true, mark: mark,
       get touched() { return touched; }, get busy() { return busy; }, get onStage() { return onStage; },
       get pose() { return { psi: cur.psi, rho: cur.rho, y: cur.y, g: cur.g }; },
       get joints() { return joints; }, get tip() { return { x: tip.x, y: tip.y, z: tip.z }; },
