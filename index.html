@@ -162,6 +162,13 @@ dialog.viewer::backdrop{background:rgba(0,0,0,.62)}
 .rc-li{fill:none;stroke:var(--card);stroke-width:9;stroke-linecap:round}
 .rc-hub{fill:var(--card);stroke:var(--ink);stroke-width:3}
 .rc-gr{fill:var(--ink)}
+.r3{position:relative;line-height:0}
+.rc3-canvas{display:block;width:100%;aspect-ratio:2/1;touch-action:pan-y;user-select:none;-webkit-user-select:none}
+.rc3-labels{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.rc3-lbl{position:absolute;left:0;top:0;font:600 11.5px/1.2 Inter,sans-serif;padding:3px 9px;border-radius:99px;background:color-mix(in srgb,var(--card) 86%,transparent);border:1px solid var(--line);color:var(--ink);white-space:nowrap;transition:opacity .2s,background .2s}
+.rc3-lbl.on{background:var(--ink);color:var(--onink);border-color:var(--ink)}
+.rc3-stage{background:transparent;border:0;color:var(--mute);font-weight:500}
+@media(max-width:700px){.rc3-canvas{aspect-ratio:1.35/1}}
 .detail{transition:opacity .25s}
 .detail.busy{opacity:.4}
 @media(max-width:520px){.tele{display:none}.cell-bar{padding-bottom:14px}}
@@ -190,7 +197,7 @@ dialog.viewer::backdrop{background:rgba(0,0,0,.62)}
 
 <main>
 <section id="projects" style="padding-top:24px"><div class="wrap">
-<div class="head row"><div><h2>Pick a project</h2><p class="sub">A small pick-and-place cell I drew for this page. Hover to guide the arm, then click a part (or choose one below) and it fetches the project to the inspection stage.</p></div>
+<div class="head row"><div><h2>Pick a project</h2><p class="sub">A small robot workcell I built for this page, with a 6-axis arm driven by inverse kinematics. Hover to guide the arm, drag to look around, then click a part (or choose one below) and it fetches the project to the inspection stage.</p></div>
 <div class="seg-group" role="group" aria-label="Project view"><button class="seg" type="button" id="v-cell" aria-pressed="true">Robot cell</button><button class="seg" type="button" id="v-all" aria-pressed="false">All projects</button></div></div>
 <div id="cell-view">
 <div class="cell" id="cell" data-state="idle"><div class="cell-scroll" id="cell-scroll"><div id="cell-svg"></div></div>
@@ -230,6 +237,7 @@ dialog.viewer::backdrop{background:rgba(0,0,0,.62)}
 
 <script src="assets/model-viewer.js" defer></script>
 <script src="assets/robot-cell.js" defer></script>
+<script src="assets/robot-cell-3d.js" defer></script>
 <dialog class="viewer" id="viewer" aria-labelledby="v-title">
 <div class="vhead"><h3 id="v-title"></h3><div class="r"><span id="v-count" aria-live="polite"></span><button class="btn sm" id="v-close" type="button" aria-label="Close photos">Close</button></div></div>
 <div class="vstage"><div class="vtrack" id="v-track" tabindex="0" role="group" aria-roledescription="carousel" aria-label="Project photos"></div>
@@ -321,11 +329,12 @@ showDetail(hashId);
 addEventListener('DOMContentLoaded',()=>{
  if(!window.initRobotCell){setView(true);return}
  const cellEl=document.getElementById('cell');
- window.cell=initRobotCell({root:cellEl,mount:document.getElementById('cell-svg'),scroller:document.getElementById('cell-scroll'),chips:document.getElementById('chips'),tele:document.getElementById('tele'),live:document.getElementById('cell-live'),initial:hashId,
+ const copts={root:cellEl,mount:document.getElementById('cell-svg'),scroller:document.getElementById('cell-scroll'),chips:document.getElementById('chips'),tele:document.getElementById('tele'),live:document.getElementById('cell-live'),initial:hashId,
   items:P.map(p=>({id:p.id,name:SHORT[p.id]})),
   onBusy:(b,quiet)=>{detail.classList.toggle('busy',b&&!quiet)},
   onPlace:(id,quiet)=>{showDetail(id);if(quiet)return;try{history.replaceState(null,'','#'+id)}catch(e){}
-   const r=detail.getBoundingClientRect();if(r.top>innerHeight*.6)scrollBy({top:r.top-innerHeight*.38,behavior:reduce?'auto':'smooth'})}});
+   const r=detail.getBoundingClientRect();if(r.top>innerHeight*.6)scrollBy({top:r.top-innerHeight*.38,behavior:reduce?'auto':'smooth'})}};
+ window.cell=(window.initRobotCell3D&&initRobotCell3D(copts))||initRobotCell(copts);
  const go=()=>{if(!window.cell.touched)window.cell.select(hashId,true)};
  if('IntersectionObserver' in window){const io=new IntersectionObserver(es=>{if(es.some(e=>e.isIntersecting)){io.disconnect();setTimeout(go,400)}},{threshold:.5});io.observe(cellEl)}else go();
  if(hashId!=='rover'||location.hash)document.getElementById('projects').scrollIntoView()});
